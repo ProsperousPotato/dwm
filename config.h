@@ -3,7 +3,8 @@
 /* Constants */
 #define TERMINAL "st"
 #define BROWSER "floorp"
-
+#define FILE_EXPLORER "pcmanfm"
+#define HOME "/home/arch/"
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -14,7 +15,7 @@ static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
+static const char col_gray4[]       = "#000000";
 static const char col_cyan[]        = "#bbbbbb";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -49,7 +50,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define PrintScreen 0x0000ff61
+#define PrintScreen 0xff61
 #define RaiseVolume 0x1008ff13
 #define LowerVolume 0x1008ff11
 #define MuteVolume 0x1008ff12
@@ -70,22 +71,19 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
-static const char *cmdprintscreen[]  = { "scrot", "-d3", "/home/arch/.screenshots/%Y-%m-%d-%s_$wx$h.jpg", NULL };
+static const char *termcmd[]  = { TERMINAL, NULL };
+static const char *cmdprintscreen[]  = { "scrot", HOME".screenshots/%Y-%m.jpg", NULL };
 static const char *volumeup[] = { "amixer", "sset", "Master", "5%+", NULL };
 static const char *volumedown[] = { "amixer", "sset", "Master", "5%-", NULL };
-static const char *fastervolumeup[] = { "amixer", "sset", "Master", "15%+", NULL };
-static const char *fastervolumedown[] = { "amixer", "sset", "Master", "15%-", NULL };
 static const char *volumetoggle[] = { "amixer", "sset", "Master", "toggle", NULL };
 static const char *mictoggle[] = { "amixer", "sset", "Capture", "toggle", NULL};
-static const char *brightnessup[] = { "brillo", "-q", "-A", "1", NULL };
-static const char *brightnessdown[] = { "brillo", "-q", "-U", "1", NULL };
+static const char *brightnessup[] = { "brillo", "-q", "-A", "3", NULL };
+static const char *brightnessdown[] = { "brillo", "-q", "-U", "3", NULL };
 static const char *fasterbrightnessup[] = { "brillo", "-q", "-A", "10", NULL };
 static const char *fasterbrightnessdown[] = { "brillo", "-q", "-U", "10", NULL };
 static const char *slock[] = { "slock", NULL };
-static const char *floorp[] = { "floorp", NULL };
-static const char *pcmanfm[] = { "pcmanfm", NULL };
-static const char *thunderbird[] = { "thunderbird", NULL };
+static const char *browser[] = { BROWSER, NULL };
+static const char *files[] = { FILE_EXPLORER, NULL };
 static const char *steam[] = { "steam", NULL };
 static const char *discord[] = { "discord", NULL };
 
@@ -97,18 +95,18 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,         togglebar,      {0} },
 	{ MODKEY,                       XK_j,         focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,         focusstack,     {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_j,         incnmaster,     {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_k,         incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_i,         incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_u,         incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,         setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,         setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return,    zoom,           {0} },
-	{ MODKEY|ShiftMask,             XK_Return,    view,           {0} },
+	{ MODKEY,                       XK_space,     zoom,           {0} },
+	{ MODKEY|ShiftMask,             XK_space,     view,           {0} },
 	{ MODKEY,                       XK_q,         killclient,     {0} },
-	{ MODKEY,                       XK_t,         setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
+  { MODKEY,                       XK_t,         setlayout,      {.v = &layouts[0]} }, 
+  { MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,         setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,     setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,     togglefloating, {0} },
+	{ MODKEY,                       XK_Return,    setlayout,      {0} },
+	{ MODKEY|ShiftMask,             XK_Return,    togglefloating, {0} },
 	{ MODKEY,                       XK_0,         view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,         tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,     focusmon,       {.i = -1 } },
@@ -118,19 +116,22 @@ static const Key keys[] = {
 	{ MODKEY,                       PrintScreen,  spawn,          {.v = cmdprintscreen } },
 	{ 0,                            RaiseVolume,  spawn,          {.v = volumeup } },
 	{ 0,                            LowerVolume,  spawn,          {.v = volumedown } },
-	{ 0|ControlMask,                RaiseVolume,  spawn,          {.v = fastervolumeup } },
-	{ 0|ControlMask,                LowerVolume,  spawn,          {.v = fastervolumedown } },
+	{ MODKEY,                       XK_Up,        spawn,          {.v = volumeup } },
+	{ MODKEY,                       XK_Down,      spawn,          {.v = volumedown } },
+	{ MODKEY,                       XK_Right,     spawn,          {.v = brightnessup } },
+  { MODKEY,                       XK_Left,      spawn,          {.v = brightnessdown } },
+  { MODKEY|ControlMask,           XK_Right,     spawn,          {.v = fasterbrightnessup } },
+  { MODKEY|ControlMask,           XK_Left,      spawn,          {.v = fasterbrightnessdown } },
 	{ 0,                            MuteVolume,   spawn,          {.v = volumetoggle } },
 	{ 0,                            BrightUp,     spawn,          {.v = brightnessup } },
 	{ 0,                            BrightDown,   spawn,          {.v = brightnessdown } },
 	{ 0|ControlMask,                BrightUp,     spawn,          {.v = fasterbrightnessup } },
 	{ 0|ControlMask,                BrightDown,   spawn,          {.v = fasterbrightnessdown } },
   { 0,                            MuteMic,      spawn,          {.v = mictoggle } },
-	{ MODKEY,                       XK_w,         spawn,          {.v = floorp } },
-	{ MODKEY,                       XK_e,         spawn,          {.v = pcmanfm } },
-	{ MODKEY,                       XK_c,         spawn,          {.v = thunderbird } },
-	{ MODKEY,                       XK_s,         spawn,          {.v = steam } },
-	{ MODKEY,                       XK_a,         spawn,          {.v = discord } },
+	{ MODKEY|ShiftMask,             XK_w,         spawn,          {.v = browser } },
+	{ MODKEY|ShiftMask,             XK_e,         spawn,          {.v = files } },
+	{ MODKEY|ShiftMask,             XK_s,         spawn,          {.v = steam } },
+	{ MODKEY|ShiftMask,             XK_d,         spawn,          {.v = discord } },
   { Mod1Mask|ControlMask,         XK_Delete,    spawn,          {.v = slock } },
 	{ MODKEY|ShiftMask,             XK_v,         spawn,          SHCMD("$HOME/scripts/./bookmarkthis.sh") },
 	{ MODKEY,                       XK_v,         spawn,          SHCMD("xdotool type $(grep -v '^#' ~/.local/share/bookmarks/bookmarksfile | dmenu -i -l 50 | cut -d' ' -f1)") },
@@ -143,7 +144,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                         6)
 	TAGKEYS(                        XK_8,                         7)
 	TAGKEYS(                        XK_9,                         8)
-	{ MODKEY|ShiftMask,             XK_z,        quit,            {0} },
+	{ MODKEY|ShiftMask,             XK_q,        quit,            {0} },
 };
 
 /* button definitions */
