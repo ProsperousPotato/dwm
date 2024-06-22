@@ -2,7 +2,7 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "floorp"
+#define BROWSER "librewolf"
 #define FILE_EXPLORER "pcmanfm"
 #define HOME "/home/arch/"
 /* appearance */
@@ -95,6 +95,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,         togglebar,      {0} },
 	{ MODKEY,                       XK_j,         focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,         focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,         rotatestack,    {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,         rotatestack,    {.i = -1 } },
 	{ MODKEY,                       XK_i,         incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_u,         incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,         setmfact,       {.f = -0.05} },
@@ -104,7 +106,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_q,         killclient,     {0} },
   { MODKEY,                       XK_t,         setlayout,      {.v = &layouts[0]} }, 
   { MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,         setlayout,      {.v = &layouts[2]} },
+  { MODKEY,                       XK_m,         setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_Return,    setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_Return,    togglefloating, {0} },
 	{ MODKEY,                       XK_0,         view,           {.ui = ~0 } },
