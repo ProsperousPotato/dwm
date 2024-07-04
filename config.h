@@ -2,9 +2,9 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "librewolf"
-#define FILE_EXPLORER "pcmanfm"
-#define HOME "/home/arch/"
+#define BROWSER "qutebrowser"
+#define FILE_EXPLORER "dolphin"
+#define HOME "/home/gentchad/"
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -62,7 +62,7 @@ static const Layout layouts[] = {
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ Mod1Mask,                     KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|Mod1Mask,              KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
@@ -72,15 +72,15 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { TERMINAL, NULL };
-static const char *cmdprintscreen[]  = { "scrot", HOME".screenshots/%Y-%m.jpg", NULL };
+static const char *cmdprintscreen[]  = { "scrot", HOME".Screenshots/%Y-%m.jpg", NULL };
 static const char *volumeup[] = { "amixer", "sset", "Master", "5%+", NULL };
 static const char *volumedown[] = { "amixer", "sset", "Master", "5%-", NULL };
 static const char *volumetoggle[] = { "amixer", "sset", "Master", "toggle", NULL };
 static const char *mictoggle[] = { "amixer", "sset", "Capture", "toggle", NULL};
-static const char *brightnessup[] = { "brillo", "-q", "-A", "3", NULL };
-static const char *brightnessdown[] = { "brillo", "-q", "-U", "3", NULL };
-static const char *fasterbrightnessup[] = { "brillo", "-q", "-A", "10", NULL };
-static const char *fasterbrightnessdown[] = { "brillo", "-q", "-U", "10", NULL };
+static const char *brightnessup[] = { "xbacklight", "-inc", "3", NULL };
+static const char *brightnessdown[] = { "xbacklight", "-dec", "3", NULL };
+static const char *fasterbrightnessup[] = { "xbacklight", "-inc", "10", NULL };
+static const char *fasterbrightnessdown[] = { "xbacklight", "-dec", "10", NULL };
 static const char *slock[] = { "slock", NULL };
 static const char *browser[] = { BROWSER, NULL };
 static const char *files[] = { FILE_EXPLORER, NULL };
@@ -104,9 +104,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_space,     zoom,           {0} },
 	{ MODKEY|ShiftMask,             XK_space,     view,           {0} },
 	{ MODKEY,                       XK_q,         killclient,     {0} },
-  { MODKEY,                       XK_t,         setlayout,      {.v = &layouts[0]} }, 
-  { MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
-  { MODKEY,                       XK_m,         setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_t,         setlayout,      {.v = &layouts[0]} }, 
+	{ MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,         setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_Return,    setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_Return,    togglefloating, {0} },
 	{ MODKEY,                       XK_0,         view,           {.ui = ~0 } },
@@ -120,22 +120,22 @@ static const Key keys[] = {
 	{ 0,                            LowerVolume,  spawn,          {.v = volumedown } },
 	{ MODKEY,                       XK_Up,        spawn,          {.v = volumeup } },
 	{ MODKEY,                       XK_Down,      spawn,          {.v = volumedown } },
-	{ MODKEY,                       XK_Right,     spawn,          {.v = brightnessup } },
-  { MODKEY,                       XK_Left,      spawn,          {.v = brightnessdown } },
-  { MODKEY|ControlMask,           XK_Right,     spawn,          {.v = fasterbrightnessup } },
-  { MODKEY|ControlMask,           XK_Left,      spawn,          {.v = fasterbrightnessdown } },
+	{ MODKEY,                       XK_Right,     spawn,          {.v = fasterbrightnessup } },
+	{ MODKEY,                       XK_Left,      spawn,          {.v = fasterbrightnessdown } },
+	{ MODKEY|ControlMask,           XK_Right,     spawn,          {.v = brightnessup } },
+	{ MODKEY|ControlMask,           XK_Left,      spawn,          {.v = brightnessdown } },
 	{ 0,                            MuteVolume,   spawn,          {.v = volumetoggle } },
-	{ 0,                            BrightUp,     spawn,          {.v = brightnessup } },
-	{ 0,                            BrightDown,   spawn,          {.v = brightnessdown } },
-	{ 0|ControlMask,                BrightUp,     spawn,          {.v = fasterbrightnessup } },
-	{ 0|ControlMask,                BrightDown,   spawn,          {.v = fasterbrightnessdown } },
-  { 0,                            MuteMic,      spawn,          {.v = mictoggle } },
+	{ 0,                            BrightUp,     spawn,          {.v = fasterbrightnessup } },
+	{ 0,                            BrightDown,   spawn,          {.v = fasterbrightnessdown } },
+	{ 0|ControlMask,                BrightUp,     spawn,          {.v = brightnessup } },
+	{ 0|ControlMask,                BrightDown,   spawn,          {.v = brightnessdown } },
+	{ 0,                            MuteMic,      spawn,          {.v = mictoggle } },
 	{ MODKEY|ShiftMask,             XK_w,         spawn,          {.v = browser } },
 	{ MODKEY|ShiftMask,             XK_e,         spawn,          {.v = files } },
 	{ MODKEY|ShiftMask,             XK_s,         spawn,          {.v = steam } },
 	{ MODKEY|ShiftMask,             XK_d,         spawn,          {.v = discord } },
-  { Mod1Mask|ControlMask,         XK_Delete,    spawn,          {.v = slock } },
-	{ MODKEY|ShiftMask,             XK_v,         spawn,          SHCMD("$HOME/scripts/./bookmarkthis.sh") },
+	{ Mod1Mask|ControlMask,         XK_Delete,    spawn,          {.v = slock } },
+	{ MODKEY|ShiftMask,             XK_v,         spawn,          SHCMD("$HOME/.scripts/./bookmarkthis.sh") },
 	{ MODKEY,                       XK_v,         spawn,          SHCMD("xdotool type $(grep -v '^#' ~/.local/share/bookmarks/bookmarksfile | dmenu -i -l 50 | cut -d' ' -f1)") },
 	TAGKEYS(                        XK_1,                         0)
 	TAGKEYS(                        XK_2,                         1)
