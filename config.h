@@ -2,16 +2,16 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "qutebrowser"
+#define BROWSER "librewolf"
 #define FILE_EXPLORER "dolphin"
-#define HOME "/home/gentchad/"
+
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "monospace:size=15" };
+static const char dmenufont[]       = "monospace:size=15";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -62,7 +62,7 @@ static const Layout layouts[] = {
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|Mod1Mask,              KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,              KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
@@ -72,7 +72,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { TERMINAL, NULL };
-static const char *cmdprintscreen[]  = { "scrot", HOME".Screenshots/%Y-%m.jpg", NULL };
+static const char *cmdprintscreen[]  = { "scrot", "~/Pictures/%Y-%m.jpg", NULL };
 static const char *volumeup[] = { "amixer", "sset", "Master", "5%+", NULL };
 static const char *volumedown[] = { "amixer", "sset", "Master", "5%-", NULL };
 static const char *volumetoggle[] = { "amixer", "sset", "Master", "toggle", NULL };
@@ -135,8 +135,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_s,         spawn,          {.v = steam } },
 	{ MODKEY|ShiftMask,             XK_d,         spawn,          {.v = discord } },
 	{ Mod1Mask|ControlMask,         XK_Delete,    spawn,          {.v = slock } },
-	{ MODKEY|ShiftMask,             XK_v,         spawn,          SHCMD("$HOME/.scripts/./bookmarkthis.sh") },
-	{ MODKEY,                       XK_v,         spawn,          SHCMD("xdotool type $(grep -v '^#' ~/.local/share/bookmarks/bookmarksfile | dmenu -i -l 50 | cut -d' ' -f1)") },
+	{ MODKEY|ShiftMask,             XK_v,         spawn,          SHCMD("~/.local/bin/./bookmarkthis.sh") },
+	{ MODKEY,                       XK_v,         spawn,          SHCMD("setxkbmap gb && xdotool type $(grep -v '^#' ~/.local/share/bookmarks/bookmarksfile | dmenu -i -l 50)") },
 	TAGKEYS(                        XK_1,                         0)
 	TAGKEYS(                        XK_2,                         1)
 	TAGKEYS(                        XK_3,                         2)
