@@ -1,8 +1,9 @@
+#include <X11/XF86keysym.h>
 /* See LICENSE file for copyright and license details. */
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "librewolf"
+#define BROWSER "librewolf-bin"
 #define FILE_EXPLORER "dolphin"
 
 /* appearance */
@@ -10,8 +11,8 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=15" };
-static const char dmenufont[]       = "monospace:size=15";
+static const char *fonts[]          = { "inconsolata-mono-nerd:size=12" };
+static const char dmenufont[]       = "inconsolata-mono-nerd:size=12";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -50,14 +51,6 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define PrintScreen 0xff61
-#define RaiseVolume 0x1008ff13
-#define LowerVolume 0x1008ff11
-#define MuteVolume 0x1008ff12
-#define BrightDown 0x1008ff03
-#define BrightUp 0x1008ff02
-#define MuteMic 0x1008ffb2
-#define HomePage 0x1008ff18
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -115,28 +108,6 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period,    focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,     tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,    tagmon,         {.i = +1 } },
-	{ MODKEY,                       PrintScreen,  spawn,          {.v = cmdprintscreen } },
-	{ 0,                            RaiseVolume,  spawn,          {.v = volumeup } },
-	{ 0,                            LowerVolume,  spawn,          {.v = volumedown } },
-	{ MODKEY,                       XK_Up,        spawn,          {.v = volumeup } },
-	{ MODKEY,                       XK_Down,      spawn,          {.v = volumedown } },
-	{ MODKEY,                       XK_Right,     spawn,          {.v = fasterbrightnessup } },
-	{ MODKEY,                       XK_Left,      spawn,          {.v = fasterbrightnessdown } },
-	{ MODKEY|ControlMask,           XK_Right,     spawn,          {.v = brightnessup } },
-	{ MODKEY|ControlMask,           XK_Left,      spawn,          {.v = brightnessdown } },
-	{ 0,                            MuteVolume,   spawn,          {.v = volumetoggle } },
-	{ 0,                            BrightUp,     spawn,          {.v = fasterbrightnessup } },
-	{ 0,                            BrightDown,   spawn,          {.v = fasterbrightnessdown } },
-	{ 0|ControlMask,                BrightUp,     spawn,          {.v = brightnessup } },
-	{ 0|ControlMask,                BrightDown,   spawn,          {.v = brightnessdown } },
-	{ 0,                            MuteMic,      spawn,          {.v = mictoggle } },
-	{ MODKEY|ShiftMask,             XK_w,         spawn,          {.v = browser } },
-	{ MODKEY|ShiftMask,             XK_e,         spawn,          {.v = files } },
-	{ MODKEY|ShiftMask,             XK_s,         spawn,          {.v = steam } },
-	{ MODKEY|ShiftMask,             XK_d,         spawn,          {.v = discord } },
-	{ Mod1Mask|ControlMask,         XK_Delete,    spawn,          {.v = slock } },
-	{ MODKEY|ShiftMask,             XK_v,         spawn,          SHCMD("~/.local/bin/./bookmarkthis.sh") },
-	{ MODKEY,                       XK_v,         spawn,          SHCMD("setxkbmap gb && xdotool type $(grep -v '^#' ~/.local/share/bookmarks/bookmarksfile | dmenu -i -l 50)") },
 	TAGKEYS(                        XK_1,                         0)
 	TAGKEYS(                        XK_2,                         1)
 	TAGKEYS(                        XK_3,                         2)
@@ -147,6 +118,28 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                         7)
 	TAGKEYS(                        XK_9,                         8)
 	{ MODKEY|ShiftMask,             XK_q,        quit,            {0} },
+	{ MODKEY,                       XK_Print,                     spawn,  {.v = cmdprintscreen } },
+	{ 0,                            XF86XK_AudioRaiseVolume,      spawn,  {.v = volumeup } },
+	{ 0,                            XF86XK_AudioLowerVolume,      spawn,  {.v = volumedown } },
+	{ MODKEY,                       XK_Up,                        spawn,  {.v = volumeup } },
+	{ MODKEY,                       XK_Down,                      spawn,  {.v = volumedown } },
+	{ MODKEY,                       XK_Right,                     spawn,  {.v = fasterbrightnessup } },
+	{ MODKEY,                       XK_Left,                      spawn,  {.v = fasterbrightnessdown } },
+	{ MODKEY|ControlMask,           XK_Right,                     spawn,  {.v = brightnessup } },
+	{ MODKEY|ControlMask,           XK_Left,                      spawn,  {.v = brightnessdown } },
+	{ 0,                            XF86XK_AudioMute,             spawn,  {.v = volumetoggle } },
+	{ 0,                            XF86XK_MonBrightnessUp,       spawn,  {.v = fasterbrightnessup } },
+	{ 0,                            XF86XK_MonBrightnessDown,     spawn,  {.v = fasterbrightnessdown } },
+	{ 0|ControlMask,                XF86XK_MonBrightnessUp,       spawn,  {.v = brightnessup } },
+	{ 0|ControlMask,                XF86XK_MonBrightnessDown,     spawn,  {.v = brightnessdown } },
+	{ 0,                            XF86XK_AudioMicMute,          spawn,  {.v = mictoggle } },
+	{ MODKEY|ShiftMask,             XK_w,                         spawn,  {.v = browser } },
+	{ MODKEY|ShiftMask,             XK_e,                         spawn,  {.v = files } },
+	{ MODKEY|ShiftMask,             XK_s,                         spawn,  {.v = steam } },
+	{ MODKEY|ShiftMask,             XK_d,                         spawn,  {.v = discord } },
+	{ Mod1Mask|ControlMask,         XK_Delete,                    spawn,  {.v = slock } },
+	{ MODKEY|ShiftMask,             XK_v,                         spawn,  SHCMD("~/.local/bin/./bookmarkthis.sh") },
+	{ MODKEY,                       XK_v,                         spawn,  SHCMD("setxkbmap gb && xdotool type $(grep -v '^#' ~/.local/share/bookmarks/bookmarksfile | dmenu -i -l 50)") },
 };
 
 /* button definitions */
