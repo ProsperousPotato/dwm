@@ -1,11 +1,11 @@
-dwm - dynamic window manager
+This is my fork of dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.
 
 
 Requirements
 ------------
-In order to build dwm you need the Xlib header files.
+In order to build dwm you need the Xlib header files, libXft and libXinerama, and obviously, xorg-server
 
 
 Installation
@@ -41,6 +41,7 @@ like this in your .xinitrc:
     done &
     exec dwm
 
+Or you can use a status bar program such as slstatus or dwmblocks
 
 Configuration
 -------------
