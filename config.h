@@ -34,6 +34,8 @@ static const Rule rules[] = {
 	 */
 	/* class         instance          title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ NULL,          "steamwebhelper", NULL,           0,         1,          0,           0,        -1 },
+	{ "VirtualBox Machine", NULL,      NULL,           0,         1,          0,           0,        -1 },
+	{ "Virt-manager", NULL,      NULL,           0,         1,          0,           0,        -1 },
 	{ "qBittorrent", NULL,             NULL,           0,         1,          0,          -1,        -1 },
 	{ "St",          NULL,             NULL,           0,         0,          1,           0,        -1 },
 	{ "URxvt",       NULL,             NULL,           0,         1,          1,           0,        -1 },
@@ -125,7 +127,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_k,                         rotatestack,    {.i = -1 } },
     { MODKEY|ShiftMask,             XK_m,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "neomutt", NULL } }},
     { ControlMask|ShiftMask,        XK_Escape,                    spawn,          {.v = (const char*[]){ TERMINAL, "-e", "btop", NULL } }},
-    { MODKEY|ShiftMask,             XK_e,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "lfcd", NULL } }},
+    { MODKEY|ShiftMask,             XK_e,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "lf", NULL } }},
 	{ MODKEY,                       XK_Print,                     spawn,          {.v = cmdprintscreen } },
 	{ 0,                            XF86XK_AudioRaiseVolume,      spawn,          {.v = volumeup } },
 	{ 0,                            XF86XK_AudioLowerVolume,      spawn,          {.v = volumedown } },

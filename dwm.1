@@ -41,6 +41,17 @@ prints version information to stderr, then exits.
 is read and displayed in the status text area. It can be set with the
 .BR xsetroot (1)
 command.
+.TP
+.B Common words explained for normies
+Super/Mod4 - Windows key. 
+Mod1 - Alt. 
+Master - The big window on the left. 
+Stack - The 'stack' of windows on the right. 
+Return - Enter key. 
+Tags - Tags are the numbers in the top left of the status bar, they're like workspaces
+Button1 - Left Click
+Button2 - Middle Click/Mouse Wheel Click
+Button3 - Right Click
 .SS Keyboard commands
 .TP
 .B Super\-Tab
@@ -86,10 +97,10 @@ Focus next window.
 Focus previous window.
 .TP
 .B Super\-Shift\-j
-Rotate currently focused window down the stack.
+Rotate currently focused window down the stack, master window will be sent to the top of the stack.
 .TP
 .B Super\-Shift\-k
-Rotate currently focused window up the stack
+Rotate currently focused window up the stack, master window will be sent to the bottom of the stack.
 .TP
 .B Super\-i
 Increase number of windows in master area.
@@ -135,7 +146,31 @@ Add/remove all windows with nth tag to/from the view.
 .TP
 .B Super\-Shift\-q
 Quit dwm.
-.SS Mouse commands ## Mouse commands are disabled in this config, however can be re-enabled in config.h
+.TP
+.B Super\-Shift\-w
+Opens web browser defined by BROWSER in config.h
+.TP
+.B Super\-Shift\-e
+Opens file explorer defined by the FILE_EXPLORER variable in config.h
+.TP
+.B Super\-Shift\-s
+Opens Steam, I'll probably change it so I can change a variable like for the others
+.TP
+.B Super\-Shift\-d
+Opens Discord, like with Steam, I'll probably change it to a variable
+.TP
+.B Control\-Mod1\-Delete
+Locks the screen using slock, requires slock to be installed to work.
+.TP
+.B Super\-PrintScreen
+Takes a screenshot using scrot, I'll probably change it to maimpick from voidrice
+.TP
+.B Super\-v
+Allows you to pick a string of text to paste from a bookmarks file using a dmenu prompt, default path is ~/.local/share/bookmarks/bookmarksfile, requires xclip
+.TP
+.B Super\-Shift\-v
+Takes the last copied text from your clipboard and pastes it to the bookmarksfile.
+.SS Mouse commands 
 .TP
 .B Super\-Button1
 Move focused window while dragging. Tiled windows will be toggled to the floating state.
@@ -145,12 +180,6 @@ Toggles focused window between floating and tiled state.
 .TP
 .B Super\-Button3
 Resize focused window while dragging. Tiled windows will be toggled to the floating state.
-.TP
-.B Super\-Shift\-w
-Opens web browser defined by BROWSER in config.h
-.TP
-.B Super\-Shift\-e
-Opens file explorer defined by the FILE_EXPLORER variable in config.h
 .SH CUSTOMIZATION
 dwm is customized by creating a custom config.h and (re)compiling the source
 code. This keeps it fast, secure and simple.
