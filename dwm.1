@@ -44,7 +44,6 @@ command.
 .TP
 .B Common words explained for normies
 Super/Mod4 - Windows key. 
-Mod1 - Alt. 
 Master - The big window on the left. 
 Stack - The 'stack' of windows on the right. 
 Return - Enter key. 
@@ -54,9 +53,8 @@ Button2 - Middle Click/Mouse Wheel Click
 Button3 - Right Click
 .SS Keyboard commands
 .TP
-.B Super\-Tab
-Start the terminal defined by the TERMINAL variable in config.h, by default it is set to
-.BR st(1).
+.B Super\-Space
+Start the terminal defined by the TERMINAL variable in config.h, by default it is set to urxvt
 .TP
 .B Super\-d
 Spawn
@@ -64,16 +62,16 @@ Spawn
 for launching other programs.
 .TP
 .B Super\-,
-Focus previous screen, if any.
+Focus previous monitor, if any.
 .TP
 .B Super\-.
-Focus next screen, if any.
+Focus next monitor, if any.
 .TP
 .B Super\-Shift\-,
-Send focused window to previous screen, if any.
+Send focused window to previous monitor, if any.
 .TP
 .B Super\-Shift\-.
-Send focused window to next screen, if any.
+Send focused window to next monitor, if any.
 .TP
 .B Super\-b
 Toggles bar on and off.
@@ -87,7 +85,7 @@ Sets floating layout.
 .B Super\-m
 Sets monocle layout.
 .TP
-.B Super\-Return
+.B Super\-Shift\-Return
 Toggles between current and previous layout.
 .TP
 .B Super\-j
@@ -114,17 +112,17 @@ Increase master area size.
 .B Super\-h
 Decrease master area size.
 .TP
-.B Super\-space
+.B Alt\-Tab
 Zooms/cycles focused window to/from master area (tiled layouts only).
 .TP
 .B Super\-q
 Close focused window.
 .TP
-.B Super\-Shift\-Return
+.B Super\-Return
 Toggle focused window between tiled and floating state.
 .TP
-.B Super\-Shift\-space
-Toggles to the previously selected tags.
+.B Super\-Tab
+Toggles to the previously selected tag.
 .TP
 .B Super\-Shift\-[1..n]
 Apply nth tag to focused window.
@@ -148,22 +146,22 @@ Add/remove all windows with nth tag to/from the view.
 Quit dwm.
 .TP
 .B Super\-Shift\-w
-Opens web browser defined by BROWSER in config.h
+Opens web browser defined by BROWSER in config.h.
 .TP
 .B Super\-Shift\-e
-Opens file explorer defined by the FILE_EXPLORER variable in config.h
+Opens lf (file manager) in a urxvt instance.
 .TP
 .B Super\-Shift\-s
-Opens Steam, I'll probably change it so I can change a variable like for the others
+Opens Steam, it's pretty easy to change
 .TP
 .B Super\-Shift\-d
-Opens Discord, like with Steam, I'll probably change it to a variable
+Opens Discord, also pretty easy to change.
 .TP
-.B Control\-Mod1\-Delete
+.B Control\-Alt\-Delete
 Locks the screen using slock, requires slock to be installed to work.
 .TP
 .B Super\-PrintScreen
-Takes a screenshot using scrot, I'll probably change it to maimpick from voidrice
+Takes a screenshot using scrot.
 .TP
 .B Super\-v
 Allows you to pick a string of text to paste from a bookmarks file using a dmenu prompt, default path is ~/.local/share/bookmarks/bookmarksfile, requires xclip
@@ -185,7 +183,6 @@ dwm is customized by creating a custom config.h and (re)compiling the source
 code. This keeps it fast, secure and simple.
 .SH SEE ALSO
 .BR dmenu (1),
-.BR st (1)
 .SH ISSUES
 Java applications which use the XToolkit/XAWT backend may draw grey windows
 only. The XToolkit/XAWT backend breaks ICCCM-compliance in recent JDK 1.5 and early
