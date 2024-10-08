@@ -3,6 +3,7 @@
 
 /* Definitions */
 #define TERMINAL "urxvtc"
+#define FLOATTERM "st"
 #define BROWSER "librewolf"
 
 /* appearance */
@@ -40,7 +41,7 @@ static const Rule rules[] = {
 	{ "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,           0,        -1 },
 	{ "Virt-manager",NULL,             NULL,           0,         0,          0,           0,        -1 },
 	{ "qBittorrent", NULL,             NULL,           0,         1,          0,           0,        -1 },
-	{ "St",          NULL,             NULL,           0,         0,          1,           0,        -1 },
+	{ "St",          NULL,             NULL,           0,         1,          1,           0,        -1 },
 	{ "URxvt",       NULL,             NULL,           0,         0,          1,           0,        -1 },
 	{ "Nvidia-settings", "nvidia-settings",NULL,       0,         1,          0,           0,        -1 },
 	{ "scrcpy",      NULL,             NULL,           0,         1,          0,           0,        -1 },
@@ -79,6 +80,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { TERMINAL, NULL };
 static const char *sutermcmd[]  = { TERMINAL,"-e", "su", NULL };
+static const char *floattermcmd[]  = { "st", NULL };
 static const char *volumeup[] = { "amixer", "sset", "Master", "5%+", NULL };
 static const char *volumedown[] = { "amixer", "sset", "Master", "5%-", NULL };
 static const char *volumetoggle[] = { "amixer", "sset", "Master", "toggle", NULL };
@@ -130,13 +132,14 @@ static const Key keys[] = {
 
   /* Non-default commands i.e. commands added in by me and patches */
 	{ MODKEY|ShiftMask,             XK_space,     spawn,          {.v = sutermcmd } },
+	{ MODKEY|ControlMask,           XK_space,     spawn,          {.v = floattermcmd } },
 	{ MODKEY|ShiftMask,             XK_j,                         rotatestack,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_k,                         rotatestack,    {.i = -1 } },
 	{ MODKEY,                       XK_g,                         spawn,          SHCMD("~/.local/bin/./dmenu_games") },
-    { MODKEY|ShiftMask,             XK_m,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "neomutt", NULL } }},
-    { MODKEY|ShiftMask,             XK_n,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "nvim", NULL } }},
-    { MODKEY|ShiftMask,             XK_h,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "htop", NULL } }},
-    { MODKEY,                       XK_e,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "lfub", NULL } }},
+    { MODKEY|ShiftMask,             XK_m,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "neomutt", NULL } }},
+    { MODKEY|ShiftMask,             XK_n,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "nvim", NULL } }},
+    { MODKEY|ShiftMask,             XK_h,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "htop", NULL } }},
+    { MODKEY,                       XK_e,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "lfub", NULL } }},
 	{ MODKEY,                       XK_Print,                     spawn,          SHCMD("scrot -q 100 ~/Pictures/%Y-%m.jpg") },
 	{ MODKEY,                       XK_Up,                        spawn,          {.v = volumeup } },
 	{ MODKEY,                       XK_Down,                      spawn,          {.v = volumedown } },
