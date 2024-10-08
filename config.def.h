@@ -1,15 +1,15 @@
 #include <X11/XF86keysym.h>
 /* See LICENSE file for copyright and license details. */
 
-/* Constants */
+/* Definitions */
 #define TERMINAL "urxvtc"
-#define BROWSER "librewolf-bin"
+#define BROWSER "librewolf"
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
-static const int showbar            = 0;        /* 0 means no bar */
+static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "cozette:size=12:autohint=true" };
 static const char dmenufont[]       = "cozette:size=12:autohint=true";
@@ -33,11 +33,16 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class         instance          title           tags mask  isfloating  isterminal  noswallow  monitor */
+	{ NULL,          NULL,             NULL,           0,         0,          0,           0,        -1 },
+	{ "discord",     "discord",        NULL,           0,         1,          0,           0,        -1 },
 	{ NULL,          "steamwebhelper", NULL,           0,         1,          0,           0,        -1 },
-	{ "Virt-manager",NULL,             NULL,           0,         1,          0,           0,        -1 },
-	{ "qBittorrent", NULL,             NULL,           0,         1,          0,          -1,        -1 },
+	{ NULL,          "steamwebhelper", "Steam",        0,         0,          0,           0,        -1 },
+	{ "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,           0,        -1 },
+	{ "Virt-manager",NULL,             NULL,           0,         0,          0,           0,        -1 },
+	{ "qBittorrent", NULL,             NULL,           0,         1,          0,           0,        -1 },
 	{ "St",          NULL,             NULL,           0,         0,          1,           0,        -1 },
-	{ "URxvt",       NULL,             NULL,           0,         1,          1,           0,        -1 },
+	{ "URxvt",       NULL,             NULL,           0,         0,          1,           0,        -1 },
+	{ "Nvidia-settings", "nvidia-settings",NULL,       0,         1,          0,           0,        -1 },
 	{ "scrcpy",      NULL,             NULL,           0,         1,          0,           0,        -1 },
 	{ "LibreWolf",   "Alert",          NULL,           0,         1,          0,           0,        -1 },
 	{ "Nsxiv",       NULL,             NULL,           0,         1,          0,           0,        -1 },
@@ -49,13 +54,13 @@ static const Rule rules[] = {
 static const float mfact     = 0.50; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
+static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[M]",      monocle },    /* first entry is default */
+	{ "[T]",      tile },    /* first entry is default */
 	{ "[F]",      NULL },    /* no layout function means floating behavior */
-	{ "[T]",      tile },
+	{ "[M]",      monocle },
 };
 
 /* key definitions */
@@ -85,7 +90,6 @@ static const char *fasterbrightnessdown[] = { "xbacklight", "-dec", "10", NULL }
 static const char *slock[] = { "slock", NULL };
 static const char *browser[] = { BROWSER, NULL };
 static const char *steam[] = { "steam", NULL };
-static const char *discord[] = { "discord", NULL };
 
 
 static const Key keys[] = {
@@ -102,9 +106,9 @@ static const Key keys[] = {
 	{ Mod1Mask,                     XK_Tab,       zoom,           {0} },
 	{ MODKEY,                       XK_Tab,       view,           {0} },
 	{ MODKEY,                       XK_q,         killclient,     {0} },
-	{ MODKEY,                       XK_m,         setlayout,      {.v = &layouts[0]} }, 
+	{ MODKEY,                       XK_t,         setlayout,      {.v = &layouts[0]} }, 
 	{ MODKEY,                       XK_f,         setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_t,         setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_m,         setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_Return,    setlayout,      {0} },
 	{ MODKEY,                       XK_Return,    togglefloating, {0} },
 	{ MODKEY,                       XK_0,         view,           {.ui = ~0 } },
@@ -122,7 +126,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                         6)
 	TAGKEYS(                        XK_8,                         7)
 	TAGKEYS(                        XK_9,                         8)
-	{ MODKEY|ShiftMask,             XK_q,        quit,            {0} },
+	{ MODKEY|ShiftMask,             XK_r,          quit,          {0} },
 
   /* Non-default commands i.e. commands added in by me and patches */
 	{ MODKEY|ShiftMask,             XK_space,     spawn,          {.v = sutermcmd } },
@@ -132,7 +136,7 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,             XK_m,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "neomutt", NULL } }},
     { MODKEY|ShiftMask,             XK_n,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "nvim", NULL } }},
     { MODKEY|ShiftMask,             XK_h,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "htop", NULL } }},
-    { MODKEY|ShiftMask,             XK_e,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "lfub", NULL } }},
+    { MODKEY,                       XK_e,                         spawn,          {.v = (const char*[]){ TERMINAL, "-e", "lfub", NULL } }},
 	{ MODKEY,                       XK_Print,                     spawn,          SHCMD("scrot -q 100 ~/Pictures/%Y-%m.jpg") },
 	{ MODKEY,                       XK_Up,                        spawn,          {.v = volumeup } },
 	{ MODKEY,                       XK_Down,                      spawn,          {.v = volumedown } },
@@ -146,11 +150,11 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_MonBrightnessUp,       spawn,          {.v = fasterbrightnessup } },
 	{ 0,                            XF86XK_MonBrightnessDown,     spawn,          {.v = fasterbrightnessdown } },
 	{ 0,                            XF86XK_AudioMicMute,          spawn,          {.v = mictoggle } },
-	{ MODKEY|ShiftMask,             XK_w,                         spawn,          {.v = browser } },
-	{ MODKEY|ShiftMask,             XK_s,                         spawn,          {.v = steam } },
-	{ MODKEY|ShiftMask,             XK_d,                         spawn,          {.v = discord } },
+	{ MODKEY,                       XK_w,                         spawn,          {.v = browser } },
+	{ MODKEY,                       XK_s,                         spawn,          {.v = steam } },
 	{ Mod1Mask|ControlMask,         XK_Delete,                    spawn,          {.v = slock } },
-	{ MODKEY,                       XK_v,                         spawn,          SHCMD("setxkbmap gb && xdotool type $(grep -v '^#' ~/.local/bin/bookmarksfile | dmenu -i -l 50)") },
+	{ MODKEY,                       XK_v,                         spawn,          SHCMD("xdotool type $(grep -v '^#' ~/.local/bin/bookmarksfile | dmenu -i -l 50)") },
+    { MODKEY|ShiftMask,             XK_End,                       spawn,          SHCMD("pkill X") },
 };
 
 /* button definitions */
