@@ -163,6 +163,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Insert,                    spawn,          SHCMD("setxkmap gb; xdotool type $(grep -v '^#' ~/.local/bin/bookmarksfile | dmenu -i -l 50)") },
 	{ MODKEY,                       XK_v,                         spawn,          SHCMD("~/.local/bin/qemu-dmenu") },
 	{ MODKEY,                       XK_c,                         spawn,          SHCMD("~/.local/bin/calculator") },
+	{ MODKEY,                       XK_x,                         spawn,          SHCMD("xkill") },
     { MODKEY|ShiftMask,             XK_End,                       spawn,          SHCMD("pkill X") },
 };
 
