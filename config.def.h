@@ -9,6 +9,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
+static const unsigned int gappx     = 5;        /* gaps between windows */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -131,15 +132,18 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_r,          quit,          {0} },
 
   /* Non-default commands i.e. commands added in by me and patches */
-	{ MODKEY|ShiftMask,             XK_space,     spawn,          {.v = sutermcmd } },
-	{ MODKEY|ControlMask,           XK_space,     spawn,          {.v = floattermcmd } },
+	{ MODKEY|ShiftMask,             XK_space,                     spawn,          {.v = sutermcmd } },
+	{ MODKEY|ControlMask,           XK_space,                     spawn,          {.v = floattermcmd } },
+    { MODKEY,                       XK_minus,                     setgaps,        {.i = -1 } },
+    { MODKEY,                       XK_equal,                     setgaps,        {.i = +1 } },
+    { MODKEY|ShiftMask,             XK_equal,                     setgaps,        {.i = 0  } },
 	{ MODKEY|ShiftMask,             XK_j,                         rotatestack,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_k,                         rotatestack,    {.i = -1 } },
 	{ MODKEY,                       XK_g,                         spawn,          SHCMD("~/.local/bin/./dmenu_games") },
     { MODKEY|ShiftMask,             XK_m,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "neomutt", NULL } }},
     { MODKEY|ShiftMask,             XK_n,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "nvim", NULL } }},
     { MODKEY|ShiftMask,             XK_h,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "htop", NULL } }},
-    { MODKEY,                       XK_e,                         spawn,          {.v = (const char*[]){ FLOATTERM, "-e", "lfub", NULL } }},
+    { MODKEY,                       XK_e,                         spawn,          {.v = (const char*[]){ "pcmanfm", NULL } }},
 	{ MODKEY,                       XK_Print,                     spawn,          SHCMD("scrot -q 100 ~/Pictures/%Y-%m.jpg") },
 	{ MODKEY,                       XK_Up,                        spawn,          {.v = volumeup } },
 	{ MODKEY,                       XK_Down,                      spawn,          {.v = volumedown } },
@@ -156,7 +160,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_w,                         spawn,          {.v = browser } },
 	{ MODKEY,                       XK_s,                         spawn,          {.v = steam } },
 	{ Mod1Mask|ControlMask,         XK_Delete,                    spawn,          {.v = slock } },
-	{ MODKEY,                       XK_v,                         spawn,          SHCMD("xdotool type $(grep -v '^#' ~/.local/bin/bookmarksfile | dmenu -i -l 50)") },
+	{ MODKEY,                       XK_Insert,                    spawn,          SHCMD("setxkmap gb; xdotool type $(grep -v '^#' ~/.local/bin/bookmarksfile | dmenu -i -l 50)") },
+	{ MODKEY,                       XK_v,                         spawn,          SHCMD("~/.local/bin/qemu-dmenu") },
+	{ MODKEY,                       XK_c,                         spawn,          SHCMD("~/.local/bin/calculator") },
     { MODKEY|ShiftMask,             XK_End,                       spawn,          SHCMD("pkill X") },
 };
 
