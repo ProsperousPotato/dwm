@@ -1699,8 +1699,7 @@ sendmon(Client *c, Monitor *m)
 	detach(c);
 	detachstack(c);
 	c->mon = m;
-  attach(c);
-	attach(c);
+    attach(c);
 	attachstack(c);
 	focus(NULL);
 	arrange(NULL);
