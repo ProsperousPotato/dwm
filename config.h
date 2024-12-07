@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* Constants */
-#define TERMINAL "xterm"
+#define TERMINAL "st"
 #define BROWSER "librewolf"
 
 /* appearance */
@@ -152,8 +152,10 @@ static const Key keys[] = {
     { MODKEY,                       XK_c,                         spawn,          SHCMD("cliphist add") },
     { MODKEY,                       XK_v,                         spawn,          SHCMD("cliphist sel") },
     { MODKEY,                       XK_x,                         spawn,          SHCMD("xkill") },
-    { MODKEY,                       XK_h,                         shiftview,      { .i = -1 } },
-	{ MODKEY,                       XK_l,                         shiftview,  	  { .i = +1 } },
+    { MODKEY,                       XK_h,                         viewprev,       {0} },
+	{ MODKEY,                       XK_l,                         viewnext,  	  {0} },
+    { MODKEY|ShiftMask,             XK_h,                         tagtoprev,      {0} },
+	{ MODKEY|ShiftMask,             XK_l,                         tagtonext,  	  {0} },
     { MODKEY|ShiftMask,             XK_r,                         quit,           {1} },
 
     /* Unused keys */
