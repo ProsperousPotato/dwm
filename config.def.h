@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* Constants */
-#define TERMINAL "xterm"
+#define TERMINAL "st"
 #define BROWSER "librewolf"
 
 /* appearance */
@@ -47,9 +47,9 @@ static const Rule rules[] = {
     { "qBittorrent", NULL,             NULL,           0,         1,          0,           0,        -1 },
     { "qBittorrent", "qbittorrent",    NULL,           0,         0,          0,           0,        -1 },
     { "St",          "st",             NULL,           0,         0,          1,           0,        -1 },
+    { "XTerm",     "xterm",            NULL,           0,         0,          1,           0,        -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,           0,        -1 },
     { "LibreWolf",   "Alert",          NULL,           0,         1,          0,           0,        -1 },
-    { "Nsxiv",       NULL,             NULL,           0,         1,          0,           0,        -1 },
     { NULL,          NULL,             "Event Tester", 0,         0,          0,           1,        -1 },
 };
 
@@ -103,8 +103,8 @@ static const Key keys[] = {
     { MODKEY,             XK_m,               setlayout,      {.v = &layouts[2]} },
     { MODKEY|ShiftMask,   XK_Return,          setlayout,      {0} },
     { MODKEY,             XK_Return,          togglefloating, {0} },
-    { MODKEY,             XK_0,               view,           {.ui = ~0 } },
-    { MODKEY|ShiftMask,   XK_0,               tag,            {.ui = ~0 } },
+    { MODKEY,             XK_grave,           view,           {.ui = ~0 } },
+    { MODKEY|ShiftMask,   XK_grave,           tag,            {.ui = ~0 } },
     { MODKEY,             XK_comma,           focusmon,       {.i = -1 } },
     { MODKEY,             XK_period,          focusmon,       {.i = +1 } },
     { MODKEY|ShiftMask,   XK_comma,           tagmon,         {.i = -1 } },
@@ -132,6 +132,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_Escape,                    spawn,          SHCMD(TERMINAL" -e htop")},
     { MODKEY,                       XK_n,                         spawn,          SHCMD(TERMINAL" -e newsboat")},
     { MODKEY,                       XK_e,                         spawn,          SHCMD(TERMINAL" -e lfub")},
+    { MODKEY,                       XK_slash,                     spawn,          SHCMD(TERMINAL" -e menu") },
     { MODKEY,                       XK_Print,                     spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_Up,                        spawn,          SHCMD("dwmvol up") },
     { MODKEY,                       XK_Down,                      spawn,          SHCMD("dwmvol down") },
@@ -145,15 +146,16 @@ static const Key keys[] = {
     { MODKEY,                       XK_F11,                       spawn,          SHCMD("dwmstats") },
     { MODKEY,                       XK_F12,                       spawn,          SHCMD("dwmext") },
     { MODKEY,                       XK_F8,                        spawn,          SHCMD("dwmnet") },
-    { MODKEY,                       XK_slash,                     spawn,          SHCMD("demu") },
     { MODKEY,                       XK_s,                         spawn,          SHCMD("steam") },
     { Mod1Mask|ControlMask,         XK_Delete,                    spawn,          SHCMD("slock") },
     { MODKEY,                       XK_w,                         spawn,          SHCMD(BROWSER) },
     { MODKEY,                       XK_c,                         spawn,          SHCMD("cliphist add") },
     { MODKEY,                       XK_v,                         spawn,          SHCMD("cliphist sel") },
     { MODKEY,                       XK_x,                         spawn,          SHCMD("xkill") },
-    { MODKEY,                       XK_h,                         shiftview,      { .i = -1 } },
-	{ MODKEY,                       XK_l,                         shiftview,  	  { .i = +1 } },
+    { MODKEY,                       XK_h,                         viewprev,       {0} },
+	{ MODKEY,                       XK_l,                         viewnext,  	  {0} },
+    { MODKEY|ShiftMask,             XK_h,                         tagtoprev,      {0} },
+	{ MODKEY|ShiftMask,             XK_l,                         tagtonext,  	  {0} },
     { MODKEY|ShiftMask,             XK_r,                         quit,           {1} },
 
     /* Unused keys */

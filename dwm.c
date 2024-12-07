@@ -183,7 +183,6 @@ static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstackvis(const Arg *arg);
 static void movestack(const Arg *arg);
-static void shiftview(const Arg *arg);
 static void focusstack(int inc, int vis);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
@@ -202,6 +201,12 @@ static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
+static unsigned int nexttag(void);
+static unsigned int prevtag(void);
+static void tagtonext(const Arg *arg);
+static void tagtoprev(const Arg *arg);
+static void viewnext(const Arg *arg);
+static void viewprev(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
@@ -1016,21 +1021,6 @@ movestack(const Arg *arg)
 }
 
 void
-shiftview(const Arg *arg)
-{
-    Arg shifted;
-    if(arg->i > 0)
-        shifted.ui = (selmon->tagset[selmon->seltags] << arg->i)
-            | (selmon->tagset[selmon->seltags] >> (LENGTH(tags) - arg->i));
-
-    else
-        shifted.ui = selmon->tagset[selmon->seltags] >> (- arg->i)
-            | selmon->tagset[selmon->seltags] << (LENGTH(tags) + arg->i);
-
-    view(&shifted);
-}
-
-void
 focusstack(int inc, int hid)
 {
 	Client *c = NULL, *i;
@@ -1446,6 +1436,58 @@ movemouse(const Arg *arg)
 	}
 }
 
+unsigned int
+nexttag(void)
+{
+    unsigned int seltag = selmon->tagset[selmon->seltags];
+    return seltag == (1 << (LENGTH(tags) - 1)) ? 1 : seltag << 1;
+}
+
+unsigned int
+prevtag(void)
+{
+    unsigned int seltag = selmon->tagset[selmon->seltags];
+    return seltag == 1 ? (1 << (LENGTH(tags) - 1)) : seltag >> 1;
+}
+
+void
+tagtonext(const Arg *arg)
+{
+    unsigned int tmp;
+
+    if (selmon->sel == NULL)
+        return;
+    
+    tmp = nexttag();
+    tag(&(const Arg){.ui = tmp});
+    view(&(const Arg){.ui = tmp});
+}
+
+void
+tagtoprev(const Arg *arg)
+{
+    unsigned int tmp;
+
+    if (selmon->sel == NULL)
+        return;
+
+    tmp = prevtag();
+    tag(&(const Arg){.ui = tmp});
+    view(&(const Arg){.ui = tmp});
+}
+
+void
+viewnext(const Arg *arg)
+{
+    view(&(const Arg){.ui = nexttag()});
+}
+
+void
+viewprev(const Arg *arg)
+{
+    view(&(const Arg){.ui = prevtag()});
+}
+
 Client *
 nexttiled(Client *c)
 {
@@ -1695,14 +1737,20 @@ sendmon(Client *c, Monitor *m)
 {
 	if (c->mon == m)
 		return;
+    int hadfocus = (c == selmon->sel);
 	unfocus(c, 1);
 	detach(c);
 	detachstack(c);
+    arrange(c->mon);
 	c->mon = m;
     attach(c);
 	attachstack(c);
-	focus(NULL);
-	arrange(NULL);
+	arrange(m);
+    if (hadfocus) {
+        focus(c);
+        restack(m);
+    } else
+        focus(NULL);
 }
 
 void
@@ -2360,7 +2408,7 @@ void
 updatestatus(void)
 {
 	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-		strcpy(stext, "");
+		strcpy(stext, "*");
 	drawbar(selmon);
 }
 
