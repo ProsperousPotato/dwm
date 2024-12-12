@@ -39,18 +39,18 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class         instance          title           tags mask  isfloating  isterminal  noswallow  monitor */
-    { "steam",       "steamwebhelper", NULL,           0,         1,          0,           0,        -1 },
-    { "steam",       "steamwebhelper", "Steam",        0,         0,          0,           0,        -1 },
-    { "steam",       NULL,         "Steam Settings",   0,         1,          0,           0,        -1 },
-    { "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,           0,        -1 },
-    { "Virt-manager",NULL,             NULL,           0,         0,          0,           0,        -1 },
-    { "qBittorrent", NULL,             NULL,           0,         1,          0,           0,        -1 },
-    { "qBittorrent", "qbittorrent",    NULL,           0,         0,          0,           0,        -1 },
-    { "St",          "st",             NULL,           0,         0,          1,           0,        -1 },
-    { "XTerm",     "xterm",            NULL,           0,         0,          1,           0,        -1 },
-    { "scrcpy",      NULL,             NULL,           0,         1,          0,           0,        -1 },
-    { "LibreWolf",   "Alert",          NULL,           0,         1,          0,           0,        -1 },
-    { NULL,          NULL,             "Event Tester", 0,         0,          0,           1,        -1 },
+    { "steam",       "steamwebhelper", NULL,           0,         1,          0,          0,         -1 },
+    { "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
+    { "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
+    { "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
+    { "Virt-manager",NULL,             NULL,           0,         0,          0,          0,         -1 },
+    { "qBittorrent", NULL,             NULL,           0,         1,          0,          0,         -1 },
+    { "qBittorrent", "qbittorrent",    NULL,           0,         0,          0,          0,         -1 },
+    { "St",          "st",             NULL,           0,         0,          1,          1,         -1 },
+    { "XTerm",     "xterm",            NULL,           0,         0,          1,          1,         -1 },
+    { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
+    { "LibreWolf",   "Alert",          NULL,           0,         1,          0,          0,         -1 },
+    { NULL,          NULL,             "Event Tester", 0,         0,          0,          0,         -1 },
 };
 
 /* layout(s) */
