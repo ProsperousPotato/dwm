@@ -2410,7 +2410,7 @@ void
 updatestatus(void)
 {
 	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-		strcpy(stext, "*");
+		strcpy(stext, "");
 	drawbar(selmon);
 }
 

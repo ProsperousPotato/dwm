@@ -47,7 +47,9 @@ static const Rule rules[] = {
     { "qBittorrent", NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "qBittorrent", "qbittorrent",    NULL,           0,         0,          0,          0,         -1 },
     { "St",          "st",             NULL,           0,         0,          1,          1,         -1 },
-    { "XTerm",     "xterm",            NULL,           0,         0,          1,          1,         -1 },
+    { "Mpv",         NULL,             NULL,           0,         1,          0,          0,         -1 },
+    { "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
+    { "XTerm",       "xterm",          NULL,           0,         0,          1,          1,         -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "LibreWolf",   "Alert",          NULL,           0,         1,          0,          0,         -1 },
     { NULL,          NULL,             "Event Tester", 0,         0,          0,          0,         -1 },
@@ -57,7 +59,7 @@ static const Rule rules[] = {
 static const float mfact     = 0.50; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen window */
+static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -94,13 +96,13 @@ static const Key keys[] = {
     { MODKEY,             XK_k,               focusstackvis,  {.i = -1 } },
     { MODKEY,             XK_i,               incnmaster,     {.i = +1 } },
     { MODKEY,             XK_u,               incnmaster,     {.i = -1 } },
-    { MODKEY,             XK_o,               setmfact,       {.f = -0.05} },
-    { MODKEY,             XK_p,               setmfact,       {.f = +0.05} },
+    { MODKEY|ControlMask, XK_h,               setmfact,       {.f = -0.05} },
+    { MODKEY|ControlMask, XK_l,               setmfact,       {.f = +0.05} },
     { Mod1Mask,           XK_Tab,             zoom,           {0} },
     { MODKEY,             XK_Tab,             view,           {0} },
     { MODKEY,             XK_q,               killclient,     {0} },
     { MODKEY,             XK_t,               setlayout,      {.v = &layouts[0]} }, 
-    { MODKEY,             XK_m,               setlayout,      {.v = &layouts[2]} },
+    { MODKEY|ShiftMask,   XK_t,               setlayout,      {.v = &layouts[2]} },
     { MODKEY|ShiftMask,   XK_Return,          setlayout,      {0} },
     { MODKEY,             XK_Return,          togglefloating, {0} },
     { MODKEY,             XK_grave,           view,           {.ui = ~0 } },
@@ -132,7 +134,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_Escape,                    spawn,          SHCMD(TERMINAL" -e htop")},
     { MODKEY,                       XK_n,                         spawn,          SHCMD(TERMINAL" -e newsboat")},
     { MODKEY,                       XK_e,                         spawn,          SHCMD(TERMINAL" -e lfub")},
-    { MODKEY,                       XK_slash,                     spawn,          SHCMD(TERMINAL" -e menu") },
+    { MODKEY|ShiftMask,             XK_slash,                     spawn,          SHCMD(TERMINAL" -e menu") },
     { MODKEY,                       XK_Print,                     spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_Up,                        spawn,          SHCMD("dwmvol up") },
     { MODKEY,                       XK_Down,                      spawn,          SHCMD("dwmvol down") },
