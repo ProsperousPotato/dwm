@@ -7,12 +7,13 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
-static const unsigned int gappx     = 4;        /* gaps between windows */
+static unsigned int gappx           = 4;        /* gaps between windows */
+static const int gaplesscount       = 3;        /* how many windows spawned before gaps appear */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "CyberpunkWaifus:size=12:autohint=true, fontawesome:size=12" };
-static const char dmenufont[]       = "CyberpunkWaifus:size=12:autohint=true, fontawesome:size=12";
+static const char *fonts[]          = { "Terminus:pixelsize=12:antialias=true:autohint=true, fontawesome:size=12" };
+static const char dmenufont[]       = "Terminus:pixelsize=12:antialias=true:autohint=true, fontawesome:size=12";
 static const char col_gray1[]       = "#000000"; 
 static const char col_gray2[]       = "#bbbbbb"; 
 static const char col_gray3[]       = "#4CAF50"; // Not selected
@@ -40,6 +41,7 @@ static const Rule rules[] = {
 	 */
 	/* class         instance          title           tags mask  isfloating  isterminal  noswallow  monitor */
     { "steam",       "steamwebhelper", NULL,           0,         1,          0,          0,         -1 },
+    { "Steam",       "Steam",          NULL,           0,         1,          0,          0,         -1 },
     { "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
     { "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
     { "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
@@ -53,6 +55,7 @@ static const Rule rules[] = {
     { "XTerm",       "xterm",          NULL,           0,         0,          1,          1,         -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "LibreWolf",   "Alert",          NULL,           0,         1,          0,          0,         -1 },
+    { "LibreWolf",   "Places",         "Library",           0,         1,          0,          0,         -1 },
     { NULL,          NULL,             "Event Tester", 0,         0,          0,          1,         -1 },
 };
 
@@ -60,7 +63,7 @@ static const Rule rules[] = {
 static const float mfact     = 0.50; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
+static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -105,8 +108,8 @@ static const Key keys[] = {
     { MODKEY,             XK_t,               setlayout,      {.v = &layouts[0]} }, 
     { MODKEY|ShiftMask,   XK_f,               setlayout,      {.v = &layouts[1]} },
     { MODKEY,             XK_m,               setlayout,      {.v = &layouts[2]} },
-    { MODKEY|ShiftMask,   XK_Return,          setlayout,      {0} },
-    { MODKEY,             XK_Return,          togglefloating, {0} },
+    // { MODKEY|ShiftMask,   XK_Return,          setlayout,      {0} },
+    { Mod1Mask,           XK_f,               togglefloating, {0} },
     { MODKEY,             XK_grave,           view,           {.ui = ~0 } },
     { MODKEY|ShiftMask,   XK_grave,           tag,            {.ui = ~0 } },
     { MODKEY,             XK_comma,           focusmon,       {.i = -1 } },
@@ -130,13 +133,19 @@ static const Key keys[] = {
     { MODKEY,                       XK_f,                         togglefullscr,  {0} },
     { MODKEY,                       XK_BackSpace,                 hide,           {0} },
     { MODKEY,                       XK_a,                         showall,        {0} },
-    { MODKEY,                       XK_g,                         spawn,          SHCMD("dmenu_games") },
+	{ Mod1Mask|ShiftMask,           XK_j,                         moveresize,     {.v = "0x 25y 0w 0h" } },
+	{ Mod1Mask|ShiftMask,           XK_k,                         moveresize,     {.v = "0x -25y 0w 0h" } },
+	{ Mod1Mask|ShiftMask,           XK_l,                         moveresize,     {.v = "25x 0y 0w 0h" } },
+	{ Mod1Mask|ShiftMask,           XK_h,                         moveresize,     {.v = "-25x 0y 0w 0h" } },
+	{ Mod1Mask|ControlMask,         XK_j,                         moveresize,     {.v = "0x 0y 0w 25h" } },
+	{ Mod1Mask|ControlMask,         XK_k,                         moveresize,     {.v = "0x 0y 0w -25h" } },
+	{ Mod1Mask|ControlMask,         XK_l,                         moveresize,     {.v = "0x 0y 25w 0h" } },
+	{ Mod1Mask|ControlMask,         XK_h,                         moveresize,     {.v = "0x 0y -25w 0h" } },
     { MODKEY|ShiftMask,             XK_m,                         spawn,          SHCMD(TERMINAL" -e neomutt")},
     { MODKEY|ShiftMask,             XK_n,                         spawn,          SHCMD(TERMINAL" -e nvim")},
     { MODKEY,                       XK_Escape,                    spawn,          SHCMD(TERMINAL" -e htop")},
     { MODKEY,                       XK_n,                         spawn,          SHCMD(TERMINAL" -e newsboat")},
     { MODKEY,                       XK_e,                         spawn,          SHCMD(TERMINAL" -e lfub")},
-    { MODKEY|ShiftMask,             XK_slash,                     spawn,          SHCMD(TERMINAL" -e menu") },
     { MODKEY,                       XK_Print,                     spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_Up,                        spawn,          SHCMD("dwmvol up") },
     { MODKEY,                       XK_Down,                      spawn,          SHCMD("dwmvol down") },
@@ -151,18 +160,17 @@ static const Key keys[] = {
     { MODKEY,                       XK_F1,                        spawn,          SHCMD("dwmext") },
     { MODKEY,                       XK_F8,                        spawn,          SHCMD("dwmnet") },
     { MODKEY,                       XK_s,                         spawn,          SHCMD("steam") },
+    { MODKEY|ShiftMask,             XK_s,                         spawn,          SHCMD("pkill -9 steam") },
     { Mod1Mask|ControlMask,         XK_Delete,                    spawn,          SHCMD("slock") },
     { MODKEY,                       XK_w,                         spawn,          SHCMD("browse "BROWSER) },
     { MODKEY,                       XK_c,                         spawn,          SHCMD("cliphist add") },
     { MODKEY,                       XK_v,                         spawn,          SHCMD("cliphist sel") },
     { MODKEY,                       XK_x,                         spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_h,                         viewprev,       {0} },
-	{ MODKEY,                       XK_l,                         viewnext,  	  {0} },
+    { MODKEY,                       XK_l,                         viewnext,  	  {0} },
     { MODKEY|ShiftMask,             XK_h,                         tagtoprev,      {0} },
-	{ MODKEY|ShiftMask,             XK_l,                         tagtonext,  	  {0} },
+    { MODKEY|ShiftMask,             XK_l,                         tagtonext,  	  {0} },
     { MODKEY|ShiftMask,             XK_r,                         quit,           {1} },
-
-    /* Unused keys */
 };
 
 /* button definitions */
