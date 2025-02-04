@@ -7,8 +7,6 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
-static unsigned int gappx           = 4;        /* gaps between windows */
-static const int gaplesscount       = 3;        /* how many windows spawned before gaps appear */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -98,8 +96,8 @@ static const Key keys[] = {
     { MODKEY,             XK_b,               togglebar,      {0} },
     { MODKEY,             XK_j,               focusstackvis,  {.i = +1 } },
     { MODKEY,             XK_k,               focusstackvis,  {.i = -1 } },
-    { MODKEY|ShiftMask,   XK_Left,            incnmaster,     {.i = +1 } },
-    { MODKEY|ShiftMask,   XK_Right,           incnmaster,     {.i = -1 } },
+    { MODKEY,             XK_i,               incnmaster,     {.i = +1 } },
+    { MODKEY,             XK_u,               incnmaster,     {.i = -1 } },
     { MODKEY|ControlMask, XK_h,               setmfact,       {.f = -0.05} },
     { MODKEY|ControlMask, XK_l,               setmfact,       {.f = +0.05} },
     { Mod1Mask,           XK_Tab,             zoom,           {0} },
@@ -125,9 +123,6 @@ static const Key keys[] = {
 
   /* Non-default commands i.e. commands added in by me and patches */
     { MODKEY|ShiftMask,             XK_space,                     spawn,          {.v = sutermcmd } },
-    { MODKEY,                       XK_minus,                     setgaps,        {.i = -1 } },
-    { MODKEY,                       XK_equal,                     setgaps,        {.i = +1 } },
-    { MODKEY|ShiftMask,             XK_equal,                     setgaps,        {.i = 0  } },
     { MODKEY|ShiftMask,             XK_j,                         movestack,      {.i = +1 } },
     { MODKEY|ShiftMask,             XK_k,                         movestack,      {.i = -1 } },
     { MODKEY,                       XK_f,                         togglefullscr,  {0} },
