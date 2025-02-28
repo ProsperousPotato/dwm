@@ -22,6 +22,7 @@
  */
 #include <errno.h>
 #include <locale.h>
+#include <stdbool.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -272,6 +273,7 @@ static pid_t winpid(Window w);
 /* variables */
 static const char broken[] = "broken";
 static char stext[256];
+static bool showtags;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh;               /* bar height */
@@ -809,12 +811,10 @@ drawbar(Monitor *m)
 	if (!m->showbar)
 		return;
 
-	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
-		drw_setscheme(drw, scheme[SchemeStatus]);
-		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
-		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
-	}
+    drw_setscheme(drw, scheme[SchemeStatus]);
+    tw = TEXTW(stext) - lrpad + 2;
+    drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
+    drw_map(drw, m->barwin, 0, 0, m->ww, bh);
 
 	for (c = m->clients; c; c = c->next) {
 		if (ISVISIBLE(c))
@@ -823,15 +823,31 @@ drawbar(Monitor *m)
 		if (c->isurgent)
 			urg |= c->tags;
 	}
-	x = 0;
+
+    int tag_width = 0;
+    for (i = 0; i < LENGTH(tags); i++) {
+		if (m->tagset[m->seltags] & 1 << i || occ & 1 <<i) {
+            tag_width += TEXTW(tags[i]);
+        }
+    }
+    int center_x = (m->ww - tag_width) / 2;
+
+	x = center_x;
 	for (i = 0; i < LENGTH(tags); i++) {
 		w = TEXTW(tags[i]);
-		if (!(m->tagset[m->seltags] & 1 << i || occ & 1 <<i)) continue; /*Only displays tags occupied by a window*/
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagsSel : SchemeTagsNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
-		x += w;
+		if (!(m->tagset[m->seltags] & 1 << i || occ & 1 <<i)) continue;
+        if (showtags || n == 0) {
+            drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagsSel : SchemeTagsNorm]);
+            drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+	        drw_map(drw, m->barwin, 0, 0, m->ww, bh);
+        } else {
+            drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagsSel : SchemeTagsNorm]);
+            drw_text(drw, x, 0, w, bh, lrpad / 2, "", urg & 1 << i);
+        }
+        x += w;
 	}
 
+    x = 0;
 	if ((w = m->ww - tw - x) > bh) {
 		if (n > 0) {
 			int remainder = w % n;
@@ -853,7 +869,12 @@ drawbar(Monitor *m)
 					}
 					remainder--;
 				}
-                drw_text(drw, x, 0, tabw, bh, (TEXTW(c->name) < tabw ? (tabw - c->incw - TEXTW(c->name) + lrpad) / 2 : lrpad / 2), c->name, 0);
+                if (!showtags) {
+                    drw_text(drw, x, 0, tabw, bh, (TEXTW(c->name) < tabw ? (tabw - c->incw - TEXTW(c->name) + lrpad) / 2 : lrpad / 2), c->name, 0);
+	                drw_map(drw, m->barwin, 0, 0, m->ww, bh);
+                } else {
+                    drw_text(drw, x, 0, tabw, bh, (TEXTW(c->name) < tabw ? (tabw - c->incw - TEXTW(c->name) + lrpad) / 2 : lrpad / 2), "", 0);
+                }
 				x += tabw;
 			}
 		} else {
@@ -863,8 +884,8 @@ drawbar(Monitor *m)
 	}
 	m->bt = n;
 	m->btw = w;
-	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
 }
+
 void
 drawbars(void)
 {
@@ -965,7 +986,7 @@ focusmon(const Arg *arg)
 void
 focusstackvis(const Arg *arg) 
 {
-	focusstack(arg->i, 0);
+    focusstack(arg->i, 0);
 }
 
 void
@@ -1016,12 +1037,15 @@ movestack(const Arg *arg)
 
 		arrange(selmon);
 	}
+    showtags = false;
 }
 
 void
 focusstack(int inc, int hid)
 {
 	Client *c = NULL, *i;
+
+    showtags = false;
 
     if ((!selmon->sel && !hid) || (selmon->sel && selmon->sel->isfullscreen && lockfullscreen))
 		return;
@@ -1522,6 +1546,7 @@ tagtonext(const Arg *arg)
     if (selmon->sel == NULL)
         return;
     
+    showtags = true;
     tmp = nexttag();
     tag(&(const Arg){.ui = tmp});
     view(&(const Arg){.ui = tmp});
@@ -1535,6 +1560,7 @@ tagtoprev(const Arg *arg)
     if (selmon->sel == NULL)
         return;
 
+    showtags = true;
     tmp = prevtag();
     tag(&(const Arg){.ui = tmp});
     view(&(const Arg){.ui = tmp});
@@ -1543,12 +1569,14 @@ tagtoprev(const Arg *arg)
 void
 viewnext(const Arg *arg)
 {
+    showtags = true;
     view(&(const Arg){.ui = nexttag()});
 }
 
 void
 viewprev(const Arg *arg)
 {
+    showtags = true;
     view(&(const Arg){.ui = prevtag()});
 }
 
@@ -1899,7 +1927,6 @@ setfullscreen(Client *c, int fullscreen)
 		c->h = c->oldh;
 		resizeclient(c, c->x, c->y, c->w, c->h);
 		arrange(c->mon);
-        XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 	}
 }
 
@@ -2090,6 +2117,7 @@ spawn(const Arg *arg)
 {
 	struct sigaction sa;
 
+    showtags = false;
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
@@ -2191,6 +2219,7 @@ toggletag(const Arg *arg)
 
 	if (!selmon->sel)
 		return;
+    showtags = true;
 	newtags = selmon->sel->tags ^ (arg->ui & TAGMASK);
 	if (newtags) {
 		selmon->sel->tags = newtags;
@@ -2204,6 +2233,7 @@ toggleview(const Arg *arg)
 {
 	unsigned int newtagset = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
 
+    showtags = true;
 	if (newtagset) {
 		selmon->tagset[selmon->seltags] = newtagset;
 		focus(NULL);
@@ -2520,6 +2550,7 @@ view(const Arg *arg)
 {
 	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
 		return;
+    showtags = true;
 	selmon->seltags ^= 1; /* toggle sel tagset */
 	if (arg->ui & TAGMASK)
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
