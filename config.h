@@ -43,17 +43,17 @@ static const Rule rules[] = {
     { "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
     { "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
     { "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
-    { "steam_proton","steam_proton","Unreal Tournament 2004",  0, 1,          0,          0,         -1 },
     { "Virt-manager",NULL,             NULL,           0,         0,          0,          0,         -1 },
     { "qBittorrent", NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "qBittorrent", "qbittorrent",    NULL,           0,         0,          0,          0,         -1 },
     { "St",          "st",             NULL,           0,         0,          1,          1,         -1 },
+    { "stfloat",     "st",             NULL,           0,         1,          1,          1,         -1 },
     { "Mpv",         NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "XTerm",       "xterm",          NULL,           0,         0,          1,          1,         -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "LibreWolf",   "Alert",          NULL,           0,         1,          0,          0,         -1 },
-    { "LibreWolf",   "Places",         "Library",           0,         1,          0,          0,         -1 },
+    { "LibreWolf",   "Places",         "Library",      0,         1,          0,          0,         -1 },
     { NULL,          NULL,             "Event Tester", 0,         0,          0,          1,         -1 },
 };
 
@@ -85,7 +85,8 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_gray4, "-sf", col_cyan, NULL };
 static const char *termcmd[]  = { TERMINAL, NULL };
-static const char *sutermcmd[]  = { TERMINAL,"-e", "su", NULL };
+static const char *floatterm[]  = { TERMINAL, "-c", "stfloat", NULL };
+static const char *sutermcmd[]  = { TERMINAL, "-e", "su", NULL };
 
 
 #include <X11/XF86keysym.h>
@@ -123,6 +124,8 @@ static const Key keys[] = {
 
   /* Non-default commands i.e. commands added in by me and patches */
     { MODKEY|ShiftMask,             XK_space,                     spawn,          {.v = sutermcmd } },
+    { Mod1Mask,                     XK_space,                     spawn,          {.v = floatterm } },
+    { Mod1Mask|ShiftMask,           XK_space,                     spawn,          SHCMD(TERMINAL" -c stfloat -e su")},
     { MODKEY|ShiftMask,             XK_j,                         movestack,      {.i = +1 } },
     { MODKEY|ShiftMask,             XK_k,                         movestack,      {.i = -1 } },
     { MODKEY,                       XK_f,                         togglefullscr,  {0} },
@@ -138,7 +141,7 @@ static const Key keys[] = {
 	{ Mod1Mask|ControlMask,         XK_h,                         moveresize,     {.v = "0x 0y -25w 0h" } },
     { MODKEY|ShiftMask,             XK_m,                         spawn,          SHCMD(TERMINAL" -e neomutt")},
     { MODKEY|ShiftMask,             XK_n,                         spawn,          SHCMD(TERMINAL" -e nvim")},
-    { MODKEY,                       XK_Escape,                    spawn,          SHCMD(TERMINAL" -e htop")},
+    { Mod1Mask,                     XK_Escape,                    spawn,          SHCMD(TERMINAL" -c stfloat -e htop")},
     { MODKEY,                       XK_n,                         spawn,          SHCMD(TERMINAL" -e newsboat")},
     { MODKEY,                       XK_e,                         spawn,          SHCMD(TERMINAL" -e lfub")},
     { MODKEY,                       XK_Print,                     spawn,          SHCMD("maimpick") },
