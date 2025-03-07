@@ -954,7 +954,7 @@ focus(Client *c)
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
 	}
 	selmon->sel = c;
-	drawbars();
+    drawbars();
 }
 
 /* there are some broken focus acquiring clients needing extra handling */
@@ -1679,17 +1679,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldy = c->y; c->y = wc.y = y;
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
-	wc.border_width = c->bw;
-    /* Hide border if only 1 client on screen */
-    if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
-        || &monocle == c->mon->lt[c->mon->sellt]->arrange)
-        && !c->isfullscreen && !c->isfloating
-        && NULL != c->mon->lt[c->mon->sellt]->arrange) {
-            c->w = wc.width += c->bw * 2;
-            c->h = wc.height += c->bw * 2;
-            wc.border_width = 0;
-    }
-
+    wc.border_width = c->bw;
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
 	XSync(dpy, False);
@@ -2087,8 +2077,8 @@ showhide(Client *c)
 		return;
 	if (ISVISIBLE(c)) {
 		/* show clients top down */
-		XMoveWindow(dpy, c->win, c->x, c->y);
-		if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
+        XMoveWindow(dpy, c->win, c->x, c->y);
+        if ((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && !c->isfullscreen)
 			resize(c, c->x, c->y, c->w, c->h, 0);
 		showhide(c->snext);
 	} else {
