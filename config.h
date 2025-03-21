@@ -87,16 +87,15 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { TERMINAL, NULL };
-static const char *floattermcmd[]  = { TERMINAL, "-c", "stfloat", NULL };
-static const char *sutermcmd[] = { TERMINAL, "-e", "su", NULL };
 
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,             XK_space,  spawn,          {.v = sutermcmd } },
-	{ Mod1Mask,                     XK_space,  spawn,          {.v = floattermcmd } },
+	{ MODKEY|ShiftMask,             XK_space,  spawn,          SHCMD(TERMINAL" -e su") },
+	{ Mod1Mask,                     XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
+	{ Mod1Mask|ShiftMask,           XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat -e su") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -117,6 +116,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	// { MODKEY,                       XK_Return, setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
+    { MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
@@ -124,28 +124,38 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
-	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL" -e mc") },
-	{ MODKEY,                       XK_w,      spawn,          SHCMD("floorp") },
-	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD("st -c stfloat -e htop") },
-	{ 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
-	{ 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
-	{ 0,                   XF86XK_AudioMute,   spawn,          SHCMD("amixer sset Capture Toggle") },
-	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
-	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
-    { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
-
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
-	{ MODKEY|ShiftMask,             XK_End,    quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
+
+    { MODKEY|ShiftMask,             XK_End,    quit,           {0} },
+    { MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
+	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL" -e mc --nosubshell") },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD(TERMINAL" -c stfloat -e su -c 'mc --nosubshell'") },
+	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
+	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
     { Mod1Mask|ControlMask,         XK_Delete, spawn,          SHCMD("slock") },
     { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
+	{ 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
+	{ 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
+	{ 0,                   XF86XK_AudioMute,   spawn,          SHCMD("amixer sset Capture Toggle") },
+	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
+	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
+    { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
+
+	{ MODKEY,                       XK_Down,   moveresize,     {.v = "0x 25y 0w 0h" } },
+	{ MODKEY,                       XK_Up,     moveresize,     {.v = "0x -25y 0w 0h" } },
+	{ MODKEY,                       XK_Right,  moveresize,     {.v = "25x 0y 0w 0h" } },
+	{ MODKEY,                       XK_Left,   moveresize,     {.v = "-25x 0y 0w 0h" } },
+	{ MODKEY|ShiftMask,             XK_Down,   moveresize,     {.v = "0x 0y 0w 25h" } },
+	{ MODKEY|ShiftMask,             XK_Up,     moveresize,     {.v = "0x 0y 0w -25h" } },
+	{ MODKEY|ShiftMask,             XK_Right,  moveresize,     {.v = "0x 0y 25w 0h" } },
+	{ MODKEY|ShiftMask,             XK_Left,   moveresize,     {.v = "0x 0y -25w 0h" } },
 };
 
 /* button definitions */
