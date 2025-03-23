@@ -7,6 +7,7 @@
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
+static const unsigned int minwsz    = 20;       /* Minimum height of a client for smfact */
 static const int swallowfloating    = 1;
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -50,17 +51,18 @@ static const Rule rules[] = {
     { "qBittorrent", "qbittorrent",    NULL,           0,         0,          0,          0,         -1 },
     { "St",          "st",             NULL,           0,         0,          1,          1,         -1 },
     { "stfloat",     "st",             NULL,           0,         1,          1,          1,         -1 },
-    { "Mpv",         NULL,             NULL,           0,         1,          0,          0,         -1 },
+    { "mpv",         NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "Pamac-manager", "pamac-manager",NULL,           0,         1,          0,          0,         -1 },
-    { "Floorp",      "Alert",          NULL,           0,         1,          0,          0,         -1 },
-    { "Floorp",      "Places",         "Library",      0,         1,          0,          0,         -1 },
+//    { "Floorp",      "Alert",          NULL,           0,         1,          0,          0,         -1 },
+//    { "Floorp",      "Places",         "Library",      0,         1,          0,          0,         -1 },
     { NULL,          NULL,             "Event Tester", 0,         0,          0,          1,         -1 },
 };
 
 /* layout(s) */
 static const float mfact     = 0.50; /* factor of master area size [0.05..0.95] */
+static const float smfact    = 0.00; /* factor of tiled clients [0.00..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen window */
@@ -103,6 +105,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_u,      incnmaster,     {.i = -1 } },
 	{ MODKEY|ControlMask,           XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY|ControlMask,           XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY|ControlMask,           XK_k,      setsmfact,      {.f = +0.05} },
+	{ MODKEY|ControlMask,           XK_j,      setsmfact,      {.f = -0.05} },
     { MODKEY,                       XK_h,      viewprev,       {0} },
     { MODKEY,                       XK_l,      viewnext,       {0} },
     { MODKEY|ShiftMask,             XK_h,      tagtoprev,      {0} },
