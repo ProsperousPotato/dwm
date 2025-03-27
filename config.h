@@ -2,7 +2,7 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "qutebrowser"
+#define BROWSER "srch"
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
@@ -11,8 +11,8 @@ static const unsigned int minwsz    = 20;       /* Minimum height of a client fo
 static const int swallowfloating    = 1;
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Perfect DOS VGA 437 Win:pixelsize=16:antialias=true:autohint=true, fontawesome:size=16" };
-static const char dmenufont[]       = "Perfect DOS VGA 437 Win:pixelsize=16:antialias=true:autohint=true, fontawesome:size=16";
+static const char *fonts[]          = { "BigBlueTerm437NerdFontMono-Regular:pixelsize=12:autohint=true, fontawesome:size=16" };
+static const char dmenufont[]       = "BigBlueTerm437NerdFontMono-Regular:pixelsize=12:autohint=true, fontawesome:size=16";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#000000";
 static const char col_gray3[]       = "#bbbbbb";
@@ -101,8 +101,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_u,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_u,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_i,      incnmaster,     {.i = -1 } },
 	{ MODKEY|ControlMask,           XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY|ControlMask,           XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ControlMask,           XK_k,      setsmfact,      {.f = +0.05} },
@@ -138,6 +138,8 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
 	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL" -e mc --nosubshell") },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          SHCMD(TERMINAL" -c stfloat -e su -c 'mc --nosubshell'") },
+	{ MODKEY,                       XK_m,      spawn,          SHCMD(TERMINAL" -e neomutt") },
+	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
