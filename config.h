@@ -11,8 +11,8 @@ static const unsigned int minwsz    = 20;       /* Minimum height of a client fo
 static const int swallowfloating    = 1;
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "BigBlueTerm437NerdFontMono-Regular:pixelsize=12:autohint=true, fontawesome:size=16" };
-static const char dmenufont[]       = "BigBlueTerm437NerdFontMono-Regular:pixelsize=12:autohint=true, fontawesome:size=16";
+static const char *fonts[]          = { "Bm437 IBM VGA 8x16:pixelsize=16, fontawesome:size=16" };
+static const char dmenufont[]       = "Bm437 IBM VGA 8x16:pixelsize=16, fontawesome:size=16";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#000000";
 static const char col_gray3[]       = "#bbbbbb";
