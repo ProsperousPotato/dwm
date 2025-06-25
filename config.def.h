@@ -2,12 +2,13 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "waterfox"
+#define BROWSER "icecat"
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
-static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
+static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
+static const char *fonts[]          = { "Terminess Nerd Font Mono:pixelsize=14, fontawesome:size=16" };
 static const char dmenufont[]       = "Terminess Nerd Font Mono:pixelsize=14";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#000000";
@@ -17,7 +18,7 @@ static const char col_cyan[]        = "#bbbbbb";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray1, col_cyan,  col_cyan  },
+	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
 /* tagging */
@@ -54,7 +55,8 @@ static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
-    { "[M]",      monocle },
+	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "[M]",      monocle },
 };
 
 /* key definitions */
@@ -70,7 +72,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray1, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 #include <X11/XF86keysym.h>
@@ -85,13 +87,14 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_u,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.01} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.01} },
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ Mod1Mask,                     XK_Tab,    zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
+	// { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
     { MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
@@ -110,12 +113,10 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL" -e mc --nosubshell") },
 	{ Mod1Mask,                     XK_e,      spawn,          SHCMD(TERMINAL" -c stfloat -e mc --nosubshell") },
-	{ MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
-	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
-	{ MODKEY,                       XK_p,      spawn,          SHCMD(TERMINAL" -c stfloat -e pulsemixer") },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD(TERMINAL" -e neomutt") },
+	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e nvtop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
@@ -126,10 +127,6 @@ static const Key keys[] = {
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
-
-    { ControlMask,                  XK_F1,     spawn,          SHCMD("amixer sset Master toggle") },
-	{ ControlMask,                  XK_F2,     spawn,          SHCMD("amixer sset Master 5%-") },
-    { ControlMask,                  XK_F3,     spawn,          SHCMD("amixer sset Master 5%+") },
 };
 
 /* button definitions */
