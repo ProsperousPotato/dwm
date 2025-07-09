@@ -42,6 +42,7 @@ static const Rule rules[] = {
     { "mpv",         NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
+    { "steam_app_1237950","steam_app_1237950",NULL,    0,         1,          0,          1,         -1 },
     { NULL,          NULL,             "Event Tester", 0,         0,          0,          1,         -1 },
 };
 
@@ -116,6 +117,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
 	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e nvtop") },
+	{ Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
