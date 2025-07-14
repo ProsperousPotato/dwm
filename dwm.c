@@ -567,8 +567,8 @@ clientmessage(XEvent *e)
 			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
-		if (c != selmon->sel && !c->isurgent)
-			seturgent(c, 1);
+        if (c != selmon->sel && !c->isurgent)
+            seturgent(c, 1);
 	}
 }
 
@@ -1128,7 +1128,7 @@ movemouse(const Arg *arg)
 
 	if (!(c = selmon->sel))
 		return;
-	if (c->isfullscreen) /* no support moving fullscreen windows by mouse */
+	if (c->isfullscreen)
 		return;
 	restack(selmon);
 	ocx = c->x;
@@ -1282,7 +1282,7 @@ resizemouse(const Arg *arg)
 
 	if (!(c = selmon->sel))
 		return;
-	if (c->isfullscreen) /* no support resizing fullscreen windows by mouse */
+	if (c->isfullscreen)
 		return;
 	restack(selmon);
 	ocx = c->x;

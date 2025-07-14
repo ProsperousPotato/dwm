@@ -74,6 +74,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray1, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
+#include "quicksearch.c"
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -113,7 +114,7 @@ static const Key keys[] = {
 	{ Mod1Mask,                     XK_e,      spawn,          SHCMD(TERMINAL" -c stfloat -e mc --nosubshell") },
 	{ MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
 	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
-	{ MODKEY,                       XK_p,      spawn,          SHCMD(TERMINAL" -c stfloat -e pulsemixer") },
+	{ Mod1Mask|ShiftMask,           XK_p,      spawn,          SHCMD(TERMINAL" -c stfloat -e pulsemixer") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
 	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e nvtop") },
@@ -132,6 +133,8 @@ static const Key keys[] = {
     { ControlMask,                  XK_F1,     spawn,          SHCMD("amixer sset Master toggle") },
 	{ ControlMask,                  XK_F2,     spawn,          SHCMD("amixer sset Master 5%-") },
     { ControlMask,                  XK_F3,     spawn,          SHCMD("amixer sset Master 5%+") },
+
+	{ MODKEY,                       XK_p,      quicksearch,    {0} }, 
 };
 
 /* button definitions */
