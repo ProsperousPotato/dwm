@@ -8,7 +8,6 @@
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 16;       /* snap pixel */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
-static const char dmenufont[]       = "Terminess Nerd Font Mono:pixelsize=14";
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#000000";
 static const char col_gray3[]       = "#bbbbbb";
@@ -54,8 +53,8 @@ static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-    { "[M]",      monocle },
+	{ NULL,      tile },    /* first entry is default */
+    { NULL,      monocle },
 };
 
 /* key definitions */
@@ -70,19 +69,15 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray1, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { TERMINAL, NULL };
 
 #include "quicksearch.c"
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,             XK_space,  spawn,          SHCMD(TERMINAL" -e su") },
+    { MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_d,      spawn,          SHCMD("dmenu_run") },
 	{ Mod1Mask,                     XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
-	{ Mod1Mask|ShiftMask,           XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat -e su") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -94,7 +89,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
+	{ Mod1Mask,                     XK_f,      togglefloating, {0} },
     { MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
@@ -112,12 +107,11 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL" -e mc --nosubshell") },
 	{ Mod1Mask,                     XK_e,      spawn,          SHCMD(TERMINAL" -c stfloat -e mc --nosubshell") },
-	{ MODKEY|ShiftMask,             XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
-	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
+	{ Mod1Mask,                     XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
+	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
 	{ Mod1Mask|ShiftMask,           XK_p,      spawn,          SHCMD(TERMINAL" -c stfloat -e pulsemixer") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e nvtop") },
 	{ Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
@@ -145,4 +139,3 @@ static const Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 };
-
