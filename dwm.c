@@ -206,7 +206,7 @@ static void setfullscreen(Client *c, int fullscreen);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
-static void seturgent(Client *c, int urg);
+// static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void sighup(int unused);
 static void sigterm(int unused);
@@ -567,10 +567,10 @@ clientmessage(XEvent *e)
 		|| cme->data.l[2] == netatom[NetWMFullscreen])
 			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
 				|| (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ && !c->isfullscreen)));
-	} else if (cme->message_type == netatom[NetActiveWindow]) {
-        if (c != selmon->sel && !c->isurgent)
-            seturgent(c, 1);
-	}
+	} // else if (cme->message_type == netatom[NetActiveWindow]) {
+//         if (c != selmon->sel && !c->isurgent)
+//             seturgent(c, 1);
+// 	}
 }
 
 void
@@ -767,8 +767,8 @@ focus(Client *c)
 	if (c) {
 		if (c->mon != selmon)
 			selmon = c->mon;
-		if (c->isurgent)
-			seturgent(c, 0);
+// 		if (c->isurgent)
+// 			seturgent(c, 0);
 		detachstack(c);
 		attachstack(c);
 		grabbuttons(c, 1);
@@ -1586,18 +1586,18 @@ setup(void)
 	focus(NULL);
 }
 
-void
-seturgent(Client *c, int urg)
-{
-	XWMHints *wmh;
-
-	c->isurgent = urg;
-	if (!(wmh = XGetWMHints(dpy, c->win)))
-		return;
-	wmh->flags = urg ? (wmh->flags | XUrgencyHint) : (wmh->flags & ~XUrgencyHint);
-	XSetWMHints(dpy, c->win, wmh);
-	XFree(wmh);
-}
+// void
+// seturgent(Client *c, int urg)
+// {
+// 	XWMHints *wmh;
+// 
+// 	c->isurgent = urg;
+// 	if (!(wmh = XGetWMHints(dpy, c->win)))
+// 		return;
+// 	wmh->flags = urg ? (wmh->flags | XUrgencyHint) : (wmh->flags & ~XUrgencyHint);
+// 	XSetWMHints(dpy, c->win, wmh);
+// 	XFree(wmh);
+// }
 
 void
 showhide(Client *c)

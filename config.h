@@ -12,7 +12,7 @@ static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#000000";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_float[]       = "#191970";
+static const char col_float[]       = "#770000";
 static const char col_cyan[]        = "#bbbbbb";
 static const char *colors[][4]      = {
 	/*               fg         bg         border     float */
