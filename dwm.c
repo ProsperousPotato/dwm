@@ -1793,6 +1793,9 @@ unmanage(Client *c, int destroyed)
 		arrange(m);
 		focus(NULL);
 		updateclientlist();
+        if (m == selmon && m->sel)
+            XWarpPointer(dpy, None, m->sel->win, 0, 0, 0, 0, 
+                    m->sel->w/2, m->sel->h/2);
 	}
 }
 

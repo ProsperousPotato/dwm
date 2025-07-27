@@ -39,6 +39,7 @@ static const Rule rules[] = {
     { "qBittorrent", "qbittorrent",    NULL,           0,         1,          0,          0,         -1 },
     { "St",          "st",             NULL,           0,         0,          1,          1,         -1 },
     { "stfloat",     NULL,             NULL,           0,         1,          1,          1,         -1 },
+    { "STARTER",     NULL,             NULL,           0,         1,          1,          1,         -1 },
     { "mpv",         NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
     { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
