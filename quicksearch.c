@@ -20,12 +20,13 @@ quicksearch(const Arg *arg)
 				int first = 1;
 				for (int i = 0; i < LENGTH(tags); i++) {
 					if (c->tags & (1 << i)) {
-						if (!first) tag_len += sprintf(tag_str + tag_len, ",");
-						tag_len += sprintf(tag_str + tag_len, "%d", i + 1);
+                        
+						if (!first) tag_len += snprintf(tag_str + tag_len, sizeof(tag_str) - tag_len, ",");
+						tag_len += snprintf(tag_str + tag_len, sizeof(tag_str) - tag_len, "%d", i + 1);
 						first = 0;
 					}
 				}
-				tag_len += sprintf(tag_str + tag_len, "] ");
+				tag_len += snprintf(tag_str + tag_len, sizeof(tag_str) - tag_len, "] ");
 				
 				size_t name_len = strlen(c->name);
 				size_t needed = names_len + tag_len + name_len + 1;
@@ -44,9 +45,10 @@ quicksearch(const Arg *arg)
 						die("quicksearch: realloc failed");
 				}
 				
-				strcpy(names + names_len, tag_str);
-				names_len += tag_len;
-				strcpy(names + names_len, c->name);
+                    strlcpy(names + names_len, tag_str, names_size - names_len);
+                    names_len += tag_len;
+                    strlcpy(names + names_len, c->name, names_size - names_len);
+
 				names_len += name_len;
 				names[names_len] = '\n';
 				names_len++;

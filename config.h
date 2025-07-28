@@ -77,7 +77,7 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    	{ MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
+    { MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_d,      spawn,          SHCMD("dmenu_run") },
 	{ Mod1Mask,                     XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -91,7 +91,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
-    	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+    { MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_f,      togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
@@ -115,22 +115,20 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
 	{ Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
-    	{ MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
-    	{ MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
-    	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
-    	{ MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
+    { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
+    { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
+    { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
+    { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
 	{ 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
 	{ 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
 	{ 0,                   XF86XK_AudioMute,   spawn,          SHCMD("amixer sset Master toggle") },
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
-    	{ MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
-
-    	{ MODKEY,                       XK_c,      spawn,          SHCMD("pgrep xcompmgr && pkill -9 xcompmgr || xcompmgr &") },
-
-    	{ ControlMask,                  XK_F1,     spawn,          SHCMD("amixer sset Master toggle") },
+    { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
+    { MODKEY,                       XK_c,      spawn,          SHCMD("pgrep xcompmgr && pkill -9 xcompmgr || xcompmgr &") },
+    { ControlMask,                  XK_F1,     spawn,          SHCMD("amixer sset Master toggle") },
 	{ ControlMask,                  XK_F2,     spawn,          SHCMD("amixer sset Master 5%-") },
-    	{ ControlMask,                  XK_F3,     spawn,          SHCMD("amixer sset Master 5%+") },
+    { ControlMask,                  XK_F3,     spawn,          SHCMD("amixer sset Master 5%+") },
 
 	{ MODKEY,                       XK_p,      quicksearch,    {0} }, 
 };
