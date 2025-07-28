@@ -45,9 +45,9 @@ quicksearch(const Arg *arg)
 						die("quicksearch: realloc failed");
 				}
 				
-                    strlcpy(names + names_len, tag_str, names_size - names_len);
-                    names_len += tag_len;
-                    strlcpy(names + names_len, c->name, names_size - names_len);
+                strlcpy(names + names_len, tag_str, names_size - names_len);
+                names_len += tag_len;
+                strlcpy(names + names_len, c->name, names_size - names_len);
 
 				names_len += name_len;
 				names[names_len] = '\n';
