@@ -6,7 +6,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
-static const unsigned int snap      = 8;       /* snap pixel */
+static const unsigned int snap      = 12;       /* snap pixel */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#000000";
