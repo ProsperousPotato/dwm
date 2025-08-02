@@ -107,28 +107,26 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_End,    quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
 
-	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL" -e mc --nosubshell") },
-	{ Mod1Mask,                     XK_e,      spawn,          SHCMD(TERMINAL" -c stfloat -e mc --nosubshell") },
 	{ Mod1Mask,                     XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
 	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
-	{ Mod1Mask|ShiftMask,           XK_p,      spawn,          SHCMD(TERMINAL" -c stfloat -e pulsemixer") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-	{ Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
+    { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
+#ifdef __linux__
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
-    { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
 	{ 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
 	{ 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
 	{ 0,                   XF86XK_AudioMute,   spawn,          SHCMD("amixer sset Master toggle") },
+    { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
+#else
+    { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
+#endif
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_c,      spawn,          SHCMD("pgrep xcompmgr && pkill -9 xcompmgr || xcompmgr &") },
-    { ControlMask,                  XK_F1,     spawn,          SHCMD("amixer sset Master toggle") },
-	{ ControlMask,                  XK_F2,     spawn,          SHCMD("amixer sset Master 5%-") },
-    { ControlMask,                  XK_F3,     spawn,          SHCMD("amixer sset Master 5%+") },
 
 	{ MODKEY,                       XK_p,      quicksearch,    {0} }, 
 };
