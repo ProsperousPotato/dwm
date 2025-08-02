@@ -120,7 +120,9 @@ static const Key keys[] = {
 	{ 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
 	{ 0,                   XF86XK_AudioMute,   spawn,          SHCMD("amixer sset Master toggle") },
     { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
-#else
+#endif
+
+#ifdef __OpenBSD__
     { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
 #endif
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
