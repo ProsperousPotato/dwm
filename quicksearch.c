@@ -64,7 +64,7 @@ quicksearch(const Arg *arg)
 	names[names_len - 1] = '\0';
 	
 	char dmenu_cmd[256];
-	snprintf(dmenu_cmd, sizeof(dmenu_cmd), "echo '%s' | dmenu -l 10 -i -p 'Switch to client:'", names);
+	snprintf(dmenu_cmd, sizeof(dmenu_cmd), "echo '%s' | dmenu -l 10 -i -p 'Find client:'", names);
 	
 	FILE *fp = popen(dmenu_cmd, "r");
 	if (!fp) {
