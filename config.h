@@ -130,7 +130,8 @@ static const Key keys[] = {
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_c,      spawn,          SHCMD("pgrep xcompmgr && pkill -9 xcompmgr || xcompmgr &") },
 
-	{ MODKEY,                       XK_p,      quicksearch,    {0} }, 
+	{ MODKEY,                       XK_p,      quicksearch,    {.i = 0} }, 
+	{ MODKEY|ShiftMask,             XK_p,      quicksearch,    {.i = 1} }, 
 };
 
 /* button definitions */

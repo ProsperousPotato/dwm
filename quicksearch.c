@@ -9,6 +9,7 @@ quicksearch(const Arg *arg)
 	int client_count = 0;
 	Client **clients = NULL;
 	size_t clients_size = 0;
+    int mode = arg->i;
 	
 	for (m = mons; m; m = m->next) {
 		for (c = m->clients; c; c = c->next) {
@@ -20,7 +21,6 @@ quicksearch(const Arg *arg)
 				int first = 1;
 				for (int i = 0; i < LENGTH(tags); i++) {
 					if (c->tags & (1 << i)) {
-                        
 						if (!first) tag_len += snprintf(tag_str + tag_len, sizeof(tag_str) - tag_len, ",");
 						tag_len += snprintf(tag_str + tag_len, sizeof(tag_str) - tag_len, "%d", i + 1);
 						first = 0;
@@ -87,14 +87,29 @@ quicksearch(const Arg *arg)
 				if (strcmp(clients[i]->name, client_name) == 0) {
 					Client *selected_client = clients[i];
 					
-					if (selected_client->mon != selmon)
-						selmon = selected_client->mon;
-					
-					Arg view_arg;
-					view_arg.ui = selected_client->tags;
-					view(&view_arg);
+                    if (mode == 1) {
+                        selected_client->tags = selmon->tagset[selmon->seltags];
 
-					focus(selected_client);
+                        if (selected_client->mon != selmon) {
+                            detach(selected_client);
+                            detachstack(selected_client);
+                            selected_client->mon = selmon;
+                            attach(selected_client);
+                            attachstack(selected_client);
+                        }
+
+                        focus(selected_client);
+                        arrange(selmon);
+                    } else {
+                        if (selected_client->mon != selmon)
+                            selmon = selected_client->mon;
+                        
+                        Arg view_arg;
+                        view_arg.ui = selected_client->tags;
+                        view(&view_arg);
+
+                        focus(selected_client);
+                    }
 
                     if (selected_client != nexttiled(selmon->clients)) {
                         zoom(0);
