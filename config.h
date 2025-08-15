@@ -132,7 +132,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      quicksearch,    {.i = 0} }, 
 	{ MODKEY|ShiftMask,             XK_p,      quicksearch,    {.i = 1} }, 
 
-	{ MODKEY,                    XK_BackSpace, togglemouse,    {0} }, 
+	{ MODKEY,                       XK_b,      togglemouse,    {0} }, 
 };
 
 /* button definitions */
