@@ -8,16 +8,14 @@
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
+static const int mouse_default      = 0;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
-static const char col_gray2[]       = "#000000";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
+static const char col_gray2[]       = "#bbbbbb";
 static const char col_float[]       = "#770000";
-static const char col_cyan[]        = "#bbbbbb";
 static const char *colors[][4]      = {
 	/*               fg         bg         border     float */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2, col_gray2 },
-	[SchemeSel]  = { col_gray1, col_cyan,  col_cyan,  col_float  },
+	[SchemeNorm] = { col_gray2, col_gray1, col_gray1, col_gray1 },
+	[SchemeSel]  = { col_gray1, col_gray2,  col_gray2,  col_float  },
 };
 
 /* tagging */
@@ -74,6 +72,7 @@ static const Layout layouts[] = {
 static const char *termcmd[]  = { TERMINAL, NULL };
 
 #include "quicksearch.c"
+#include "togglemouse.c"
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -132,6 +131,8 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_p,      quicksearch,    {.i = 0} }, 
 	{ MODKEY|ShiftMask,             XK_p,      quicksearch,    {.i = 1} }, 
+
+	{ MODKEY,                    XK_BackSpace, togglemouse,    {0} }, 
 };
 
 /* button definitions */
