@@ -2,7 +2,7 @@ static Window fw = 0;
 static int locked = 0;
 
 void
-togglemouse(const Arg *arg)
+togglemouse(const Arg *arg) {
     if (locked) {
         XUngrabPointer(dpy, CurrentTime);
 		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
