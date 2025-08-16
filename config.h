@@ -18,8 +18,12 @@ static const char *colors[][4]      = {
 	[SchemeSel]  = { col_gray1, col_gray2,  col_gray2,  col_float  },
 };
 
+static const char *const autostart[] = {
+    NULL
+};
+
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5" };
+static const char *tags[] = { "0", "1", "2", "3", "4" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -32,9 +36,6 @@ static const Rule rules[] = {
     { "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
     { "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
     { "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
-    { "Virt-manager",NULL,             NULL,           0,         0,          0,          0,         -1 },
-    { "qBittorrent", NULL,             NULL,           0,         1,          0,          0,         -1 },
-    { "qBittorrent", "qbittorrent",    NULL,           0,         1,          0,          0,         -1 },
     { "St",          "st",             NULL,           0,         0,          1,          1,         -1 },
     { "stfloat",     NULL,             NULL,           0,         1,          1,          1,         -1 },
     { "STARTER",     NULL,             NULL,           0,         1,          1,          1,         -1 },
