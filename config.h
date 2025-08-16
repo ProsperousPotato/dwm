@@ -19,6 +19,8 @@ static const char *colors[][4]      = {
 };
 
 static const char *const autostart[] = {
+/*  program     arguments           options     null terminator  */
+//  "st",       "-c stfloat -e",    "htop",     NULL,
     NULL
 };
 
@@ -72,7 +74,7 @@ static const Layout layouts[] = {
 /* commands */
 static const char *termcmd[]  = { TERMINAL, NULL };
 
-#include "quicksearch.c"
+#include "search.c"
 #include "togglemouse.c"
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
@@ -130,8 +132,8 @@ static const Key keys[] = {
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_c,      spawn,          SHCMD("pgrep xcompmgr && pkill -9 xcompmgr || xcompmgr &") },
 
-	{ MODKEY,                       XK_p,      quicksearch,    {.i = 0} }, 
-	{ MODKEY|ShiftMask,             XK_p,      quicksearch,    {.i = 1} }, 
+	{ MODKEY,                       XK_p,      search,         {.i = 0} }, 
+	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} }, 
 
 	{ MODKEY,                       XK_b,      togglemouse,    {0} }, 
 };
