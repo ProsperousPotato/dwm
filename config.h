@@ -2,7 +2,7 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "firefox"
+#define BROWSER "chromium"
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
@@ -74,8 +74,6 @@ static const Layout layouts[] = {
 /* commands */
 static const char *termcmd[]  = { TERMINAL, NULL };
 
-#include "search.c"
-#include "togglemouse.c"
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */

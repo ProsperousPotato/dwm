@@ -281,6 +281,9 @@ static xcb_connection_t *xcon;
 static pid_t *autostart_pids;
 static size_t autostart_len;
 
+static Window fw = 0;
+static int ml = 0;
+
 /* configuration, allows nested code to access above variables */
 #include "config.h"
 
@@ -2248,6 +2251,179 @@ zoom(const Arg *arg)
 	pop(c);
 
     XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+}
+
+void
+search(const Arg *arg) {
+	Client *c;
+	Monitor *m;
+	char *names = NULL;
+	size_t namesize = 0;
+	size_t nameslen = 0;
+	int clientnum = 0;
+	Client **clients = NULL;
+	size_t clientsize = 0;
+    int mode = arg->i;
+	
+	for (m = mons; m; m = m->next) {
+		for (c = m->clients; c; c = c->next) {
+			if (!ISVISIBLE(c)) {
+				clientnum++;
+				
+				char ts[64] = "[";
+				int tl = 1;
+				int first = 1;
+				for (int i = 0; i < LENGTH(tags); i++) {
+					if (c->tags & (1 << i)) {
+						if (!first) tl += snprintf(ts + tl, sizeof(ts) - tl, ",");
+						tl += snprintf(ts + tl, sizeof(ts) - tl, "%d", i + 1);
+						first = 0;
+					}
+				}
+				tl += snprintf(ts + tl, sizeof(ts) - tl, "] ");
+				
+				size_t namelen = strlen(c->name);
+				size_t needed = nameslen + tl + namelen + 1;
+				
+				if (needed > namesize) {
+					namesize = needed * 2;
+					names = realloc(names, namesize);
+					if (!names)
+						die("search: realloc failed");
+				}
+				
+				if (clientnum > clientsize) {
+					clientsize = clientnum * 2;
+					clients = realloc(clients, clientsize * sizeof(Client *));
+					if (!clients)
+						die("search: realloc failed");
+				}
+				
+                strlcpy(names + nameslen, ts, namesize - nameslen);
+                nameslen += tl;
+                strlcpy(names + nameslen, c->name, namesize - nameslen);
+
+				nameslen += namelen;
+				names[nameslen] = '\n';
+				nameslen++;
+				
+				clients[clientnum - 1] = c;
+			}
+		}
+	}
+	
+	if (clientnum == 0)
+		return;
+	
+	names[nameslen - 1] = '\0';
+	
+	char dmenucmd[256];
+	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -l 10 -i -p 'Find client:'", names);
+	
+	FILE *fp = popen(dmenucmd, "r");
+	if (!fp) {
+		free(names);
+		free(clients);
+		return;
+	}
+	
+	char selname[256];
+	if (fgets(selname, sizeof(selname), fp) != NULL) {
+		size_t len = strlen(selname);
+		if (len > 0 && selname[len - 1] == '\n')
+			selname[len - 1] = '\0';
+		
+		char *clientname = strchr(selname, ']');
+		if (clientname) {
+			clientname += 2;
+			
+			for (int i = 0; i < clientnum; i++) {
+				if (strcmp(clients[i]->name, clientname) == 0) {
+					Client *selclient = clients[i];
+					
+                    if (mode == 1) {
+                        selclient->tags = selmon->tagset[selmon->seltags];
+
+                        if (selclient->mon != selmon) {
+                            detach(selclient);
+                            detachstack(selclient);
+                            selclient->mon = selmon;
+                            attach(selclient);
+                            attachstack(selclient);
+                        }
+
+                        focus(selclient);
+                        arrange(selmon);
+                    } else {
+                        if (selclient->mon != selmon)
+                            selmon = selclient->mon;
+                        
+                        Arg view_arg;
+                        view_arg.ui = selclient->tags;
+                        view(&view_arg);
+
+                        focus(selclient);
+                    }
+
+                    if (selclient != nexttiled(selmon->clients)) {
+                        zoom(0);
+                    }
+					
+					break;
+				}
+			}
+		}
+	}
+	
+	pclose(fp);
+	free(names);
+	free(clients);
+}
+
+void
+togglemouse(const Arg *arg) {
+    if (ml) {
+        XUngrabPointer(dpy, CurrentTime);
+		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+        if (fw) {
+            XDestroyWindow(dpy, fw);
+            fw = 0;
+        }
+        ml = 0;
+        return;
+    }
+
+    Window root = RootWindow(dpy, screen);
+
+    XSetWindowAttributes attrs;
+    attrs.override_redirect = True;
+    attrs.event_mask = 0;
+
+    fw = XCreateWindow(
+        dpy, root, 0, sh - 1, 1, 1, 0,
+        DefaultDepth(dpy, screen),
+        InputOutput, DefaultVisual(dpy, screen),
+        CWOverrideRedirect | CWEventMask, &attrs
+    );
+
+    XMapRaised(dpy, fw);
+    XSync(dpy, False);
+
+    XWarpPointer(dpy, None, root, 0, 0, 0, 0, 0, sh - 1);
+
+    if (XGrabPointer(dpy, fw, True,
+                     0,
+                     GrabModeAsync,
+                     GrabModeAsync,
+                     fw,
+                     None,
+                     CurrentTime) != GrabSuccess) {
+        XDestroyWindow(dpy, fw);
+        fw = 0;
+        return;
+    }
+
+    ml = 1;
 }
 
 static void
