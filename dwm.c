@@ -1536,7 +1536,6 @@ setup(void)
 	sigaction(SIGCHLD, &sa, NULL);
 
 	/* clean up any zombies (inherited from .xinitrc etc) immediately */
-	// while (waitpid(-1, NULL, WNOHANG) > 0);
     while (0 < (pid = waitpid(-1, NULL, WNOHANG))) {
         pid_t *p, *lim;
 
@@ -2341,7 +2340,7 @@ search(const Arg *arg) {
 				if (strcmp(clients[i]->name, clientname) == 0) {
 					Client *selclient = clients[i];
 					
-                    if (mode == 1) {
+                    if (mode == 1 || mode == 2) {
                         selclient->tags = selmon->tagset[selmon->seltags];
 
                         if (selclient->mon != selmon) {
@@ -2353,7 +2352,15 @@ search(const Arg *arg) {
                         }
 
                         focus(selclient);
-                        arrange(selmon);
+
+                        if (mode == 1) {
+                            arrange(selmon);
+                            if (selclient != nexttiled(selmon->clients)) {
+                                zoom(0);
+                            }
+                        } else if (mode == 2)
+                            killclient(0);
+
                     } else {
                         if (selclient->mon != selmon)
                             selmon = selclient->mon;
@@ -2363,12 +2370,13 @@ search(const Arg *arg) {
                         view(&view_arg);
 
                         focus(selclient);
+
+                        if (selclient != nexttiled(selmon->clients)) {
+                            zoom(0);
+                        }
+
                     }
 
-                    if (selclient != nexttiled(selmon->clients)) {
-                        zoom(0);
-                    }
-					
 					break;
 				}
 			}

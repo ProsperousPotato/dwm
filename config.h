@@ -132,6 +132,7 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_p,      search,         {.i = 0} }, 
 	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} }, 
+	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} }, 
 
 	{ MODKEY,                       XK_b,      togglemouse,    {0} }, 
 };
