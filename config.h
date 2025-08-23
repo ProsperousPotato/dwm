@@ -2,7 +2,7 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "chromium"
+#define BROWSER "firefox"
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
@@ -99,11 +99,13 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
+
 	{ MODKEY|ShiftMask,             XK_End,    quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
 
@@ -129,12 +131,13 @@ static const Key keys[] = {
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
     { MODKEY,                       XK_c,      spawn,          SHCMD("pgrep xcompmgr && pkill -9 xcompmgr || xcompmgr &") },
+    { MODKEY|ShiftMask,             XK_k,      spawn,          SHCMD(TERMINAL" -c stfloat -e fkill") },
 
 	{ MODKEY,                       XK_p,      search,         {.i = 0} }, 
 	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} }, 
 	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} }, 
 
-	{ MODKEY,                       XK_b,      togglemouse,    {0} }, 
+	{ MODKEY,                       XK_o,      togglemouse,    {0} }, 
 };
 
 /* button definitions */
