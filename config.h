@@ -7,6 +7,7 @@
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
+static const int refreshrate        = 120;
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int mouse_default      = 0;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
