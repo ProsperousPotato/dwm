@@ -7,7 +7,7 @@
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
-static const int refreshrate        = 120;
+static const int refreshrate        = 240;
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int mouse_default      = 0;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
@@ -22,6 +22,7 @@ static const char *colors[][4]      = {
 static const char *const autostart[] = {
 /*  program     arguments           options     null terminator  */
 //  "st",       "-c stfloat -e",    "htop",     NULL,
+    "xhidecursor",  "",             "",         NULL,
     NULL
 };
 
@@ -58,6 +59,7 @@ static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ NULL,      tile },    /* first entry is default */
+    { NULL,      NULL },
     { NULL,      monocle },
 };
 
@@ -91,7 +93,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                   XK_BackSpace,  setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
     { MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_f,      togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
