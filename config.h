@@ -7,7 +7,7 @@
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
-static const int refreshrate        = 240;
+static const int refreshrate        = 120;
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int mouse_default      = 0;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
@@ -21,7 +21,6 @@ static const char *colors[][4]      = {
 
 static const char *const autostart[] = {
 /*  program     arguments           options     null terminator  */
-//  "st",       "-c stfloat -e",    "htop",     NULL,
     "xhidecursor",  "",             "",         NULL,
     NULL
 };
@@ -83,8 +82,8 @@ static const Key keys[] = {
 	{ Mod1Mask,                     XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_u,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_minus,  incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_equal,  incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.01} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.01} },
 	{ Mod1Mask,                     XK_Tab,    zoom,           {0} },
@@ -117,6 +116,7 @@ static const Key keys[] = {
 	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
+
 #ifdef __linux__
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
@@ -129,6 +129,7 @@ static const Key keys[] = {
 #ifdef __OpenBSD__
     { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
 #endif
+
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
@@ -140,6 +141,28 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} }, 
 
 	{ MODKEY,                       XK_o,      togglemouse,    {0} }, 
+
+	{ MODKEY,                       XK_KP_Down,    moveresize,     {.v = "0x 15y 0w 0h" } },
+	{ MODKEY,                       XK_KP_Up,      moveresize,     {.v = "0x -15y 0w 0h" } },
+	{ MODKEY,                       XK_KP_Right,   moveresize,     {.v = "15x 0y 0w 0h" } },
+	{ MODKEY,                       XK_KP_Left,    moveresize,     {.v = "-15x 0y 0w 0h" } },
+	{ MODKEY,                       XK_KP_Begin,   togglefloating, {0} },
+    { MODKEY|ShiftMask,             XK_KP_Begin,   togglefullscr,  {0} },
+
+	{ MODKEY,                       XK_KP_Home,    moveresize,     {.v = "-15x -15y 0w 0h" } }, /* Diagonal Left && Up */
+	{ MODKEY,                       XK_KP_Prior,   moveresize,     {.v = "15x -15y 0w 0h" } }, /* Diagonal Right && Up */
+	{ MODKEY,                       XK_KP_End,     moveresize,     {.v = "-15x 15y 0w 0h" } }, /* Diagonal Left && Down */
+	{ MODKEY,                       XK_KP_Next,    moveresize,     {.v = "15x 15y 0w 0h" } }, /* Diagonal Right && Down */
+
+	{ MODKEY|ShiftMask,             XK_KP_Down,    moveresize,     {.v = "0x 0y 0w 15h" } },
+	{ MODKEY|ShiftMask,             XK_KP_Up,      moveresize,     {.v = "0x 0y 0w -15h" } },
+	{ MODKEY|ShiftMask,             XK_KP_Right,   moveresize,     {.v = "0x 0y 15w 0h" } },
+	{ MODKEY|ShiftMask,             XK_KP_Left,    moveresize,     {.v = "0x 0y -15w 0h" } },
+
+	{ MODKEY|ShiftMask,             XK_KP_Home,    moveresize,     {.v = "0x 0y -15w -15h" } }, /* Diagonal Left && Up */
+	{ MODKEY|ShiftMask,             XK_KP_Prior,   moveresize,     {.v = "0x 0y 15w -15h" } }, /* Diagonal Right && Up */
+	{ MODKEY|ShiftMask,             XK_KP_End,     moveresize,     {.v = "0x 0y -15w 15h" } }, /* Diagonal Left && Down */
+	{ MODKEY|ShiftMask,             XK_KP_Next,    moveresize,     {.v = "0x 0y 15w 15h" } }, /* Diagonal Right && Down */
 };
 
 /* button definitions */
