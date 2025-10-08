@@ -1181,13 +1181,15 @@ moveresize(const Arg *arg) {
 	Bool xqp = XQueryPointer(dpy, root, &dummy, &dummy, &msx, &msy, &dx, &dy, &dui);
 	resize(c, nx, ny, nw, nh, True);
 
-	if (xqp && ox <= msx && (ox + ow) >= msx && oy <= msy && (oy + oh) >= msy)
-	{
-		nmx = c->x - ox + c->w - ow;
-		nmy = c->y - oy + c->h - oh;
-		if ((msx + nmx) > c->x && (msy + nmy) > c->y)
-			XWarpPointer(dpy, None, None, 0, 0, 0, 0, nmx, nmy);
-	}
+    if (!ml) {
+        if (xqp && ox <= msx && (ox + ow) >= msx && oy <= msy && (oy + oh) >= msy)
+        {
+            nmx = c->x - ox + c->w - ow;
+            nmy = c->y - oy + c->h - oh;
+            if ((msx + nmx) > c->x && (msy + nmy) > c->y)
+                XWarpPointer(dpy, None, None, 0, 0, 0, 0, nmx, nmy);
+        }
+    }
 }
 
 void
