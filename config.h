@@ -13,10 +13,11 @@ static const int mouse_default      = 0;        /* 1 means enable mouse by defau
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#bbbbbb";
 static const char col_float[]       = "#770000";
-static const char *colors[][4]      = {
-	/*               fg         bg         border     float */
-	[SchemeNorm] = { col_gray2, col_gray1, col_gray1, col_gray1 },
-	[SchemeSel]  = { col_gray1, col_gray2,  col_gray2,  col_float  },
+static const char col_master[]      = "#FF9F1C";
+static const char *colors[][5]      = {
+	/*               fg         bg          border      float      master */
+	[SchemeNorm] = { col_gray2, col_gray1,  col_gray1,  col_gray1, col_gray1   },
+	[SchemeSel]  = { col_gray1, col_gray2,  col_gray2,  col_float, col_master  },
 };
 
 static const char *const autostart[] = {
@@ -26,7 +27,7 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "0", "1", "2", "3", "4" };
+static const char *tags[] = { "0", "1", "2" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -104,8 +105,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
 
 	{ MODKEY|ShiftMask,             XK_End,    quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
@@ -118,11 +117,11 @@ static const Key keys[] = {
     { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
 
 #ifdef __linux__
-    { MODKEY,                       XK_s,      spawn,          SHCMD("steam") },
+    { MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
-	{ 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
-	{ 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
-	{ 0,                   XF86XK_AudioMute,   spawn,          SHCMD("amixer sset Master toggle") },
+    { 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
+    { 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
+    { 0,                 XF86XK_AudioMute,     spawn,          SHCMD("amixer sset Master toggle") },
     { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
 #endif
 
