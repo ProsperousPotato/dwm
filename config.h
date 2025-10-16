@@ -13,7 +13,7 @@ static const int mouse_default      = 0;        /* 1 means enable mouse by defau
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#bbbbbb";
 static const char col_float[]       = "#770000";
-static const char col_master[]      = "#FF9F1C";
+static const char col_master[]      = "#FF8700";
 static const char *colors[][5]      = {
 	/*               fg         bg          border      float      master */
 	[SchemeNorm] = { col_gray2, col_gray1,  col_gray1,  col_gray1, col_gray1   },

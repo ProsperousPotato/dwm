@@ -60,8 +60,6 @@
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
-#define ColFloat                3
-#define ColMaster               4
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
@@ -1669,7 +1667,6 @@ setup(void)
 	/* init appearance */
 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
 	for (i = 0; i < LENGTH(colors); i++) {
-		scheme[i] = drw_scm_create(drw, colors[i], 4);
 		scheme[i] = drw_scm_create(drw, colors[i], 5);
     }
 
