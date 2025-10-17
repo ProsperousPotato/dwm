@@ -7,9 +7,9 @@
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
-static const int refreshrate        = 120;
+static const int refreshrate        = 180;
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
-static const int mouse_default      = 0;        /* 1 means enable mouse by default */
+static const int mousedefault       = 0;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#bbbbbb";
 static const char col_float[]       = "#770000";
@@ -21,8 +21,9 @@ static const char *colors[][5]      = {
 };
 
 static const char *const autostart[] = {
-/*  program     arguments           options     null terminator  */
+/*  program         arguments       options     null terminator  */
     "xhidecursor",  "",             "",         NULL,
+    "hsetroot",     "-solid",       "black",    NULL,
     NULL
 };
 

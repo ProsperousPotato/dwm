@@ -121,7 +121,7 @@ struct Monitor {
 	float mfact;
 	int nmaster;
 	int num;
-	int by;               /* bar geometry */
+	// int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
 	unsigned int seltags;
@@ -131,7 +131,7 @@ struct Monitor {
 	Client *sel;
 	Client *stack;
 	Monitor *next;
-	Window barwin;
+	// Window barwin;
 	const Layout *lt[2];
 };
 
@@ -494,8 +494,8 @@ buttonpress(XEvent *e)
 		selmon = m;
 		focus(NULL);
 	}
-	if (ev->window == selmon->barwin) {
-	} else if ((c = wintoclient(ev->window))) {
+	// if (ev->window == selmon->barwin) {
+	/* } else */ if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
@@ -557,8 +557,8 @@ cleanupmon(Monitor *mon)
 		for (m = mons; m && m->next != mon; m = m->next);
 		m->next = mon->next;
 	}
-	XUnmapWindow(dpy, mon->barwin);
-	XDestroyWindow(dpy, mon->barwin);
+	// XUnmapWindow(dpy, mon->barwin);
+	// XDestroyWindow(dpy, mon->barwin);
 	free(mon);
 }
 
@@ -616,7 +616,7 @@ configurenotify(XEvent *e)
 				for (c = m->clients; c; c = c->next)
 					if (c->isfullscreen)
 						resizeclient(c, m->mx, m->my, m->mw, m->mh);
-				XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, m->ww, bh);
+				// XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, m->ww, bh);
 			}
 			focus(NULL);
 			arrange(NULL);
@@ -1436,11 +1436,11 @@ restack(Monitor *m)
 		XRaiseWindow(dpy, m->sel->win);
 	if (m->lt[m->sellt]->arrange) {
 		wc.stack_mode = Below;
-		wc.sibling = m->barwin;
+		// wc.sibling = m->barwin;
 		for (c = m->stack; c; c = c->snext)
 			if (!c->isfloating && ISVISIBLE(c)) {
 				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
-				wc.sibling = c->win;
+				// wc.sibling = c->win;
 			}
 	}
 	XSync(dpy, False);
@@ -1670,9 +1670,7 @@ setup(void)
 		scheme[i] = drw_scm_create(drw, colors[i], 5);
 
     /* init mouse */
-    if (mouse_default == 0) {
-        togglemouse(NULL);
-    }
+    mousedefault == 0 ? togglemouse(NULL) : (void)0 ;
 
 	/* supporting window for NetWMCheck */
 	wmcheckwin = XCreateSimpleWindow(dpy, root, 0, 0, 1, 1, 0, 0, 0);
@@ -2283,8 +2281,8 @@ wintomon(Window w)
 	if (w == root && getrootptr(&x, &y))
 		return recttomon(x, y, 1, 1);
 	for (m = mons; m; m = m->next)
-		if (w == m->barwin)
-			return m;
+		// if (w == m->barwin)
+		// 	return m;
 	if ((c = wintoclient(w)))
 		return c->mon;
 	return selmon;
