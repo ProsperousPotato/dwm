@@ -23,7 +23,9 @@ static const char *colors[][5]      = {
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
     "xhidecursor",  "",             "",         NULL,
-    "hsetroot",     "-solid",       "black",    NULL,
+    "xsetroot",     "-solid",       "#808080",  NULL,
+    "xmodmap",      "-e",           "keycode 66 = Escape",  NULL,
+    "xmodmap",      "-e",           "keycode 108 = Caps_Lock",  NULL,
     NULL
 };
 
