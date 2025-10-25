@@ -494,8 +494,7 @@ buttonpress(XEvent *e)
 		selmon = m;
 		focus(NULL);
 	}
-	// if (ev->window == selmon->barwin) {
-	/* } else */ if ((c = wintoclient(ev->window))) {
+	if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
@@ -784,6 +783,9 @@ focus(Client *c)
             XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
         }
 		setfocus(c);
+
+        if (selmon->lt[selmon->sellt]->arrange == monocle)
+            XRaiseWindow(dpy, c->win);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
