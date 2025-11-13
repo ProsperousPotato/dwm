@@ -20,6 +20,7 @@ static const char *colors[][5]      = {
 	[SchemeSel]  = { col_gray1, col_gray2,  col_gray2,  col_float, col_master  },
 };
 
+/* autostart */
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
     "xhidecursor",  "",             "",         NULL,
@@ -66,6 +67,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
+#define MODKEYTWO Mod1Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -83,14 +85,14 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
     { MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_d,      spawn,          SHCMD("dmenu_run") },
-	{ Mod1Mask,                     XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
+	{ MODKEYTWO,                    XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_minus,  incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_equal,  incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.01} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.01} },
-	{ Mod1Mask,                     XK_Tab,    zoom,           {0} },
+	{ MODKEYTWO,                    XK_Tab,    zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
@@ -112,10 +114,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_End,    quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
 
-	{ Mod1Mask,                     XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
-	{ Mod1Mask,                     XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
+	{ MODKEYTWO,                    XK_m,      spawn,          SHCMD(TERMINAL" -c stfloat -e neomutt") },
+	{ MODKEYTWO,                    XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
-	{ Mod1Mask,                     XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
+	{ MODKEYTWO,                    XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
 
@@ -125,11 +127,11 @@ static const Key keys[] = {
     { 0,          XF86XK_AudioRaiseVolume,     spawn,          SHCMD("amixer sset Master 5%+") },
     { 0,          XF86XK_AudioLowerVolume,     spawn,          SHCMD("amixer sset Master 5%-") },
     { 0,                 XF86XK_AudioMute,     spawn,          SHCMD("amixer sset Master toggle") },
-    { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
+    { MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
 #endif
 
 #ifdef __OpenBSD__
-    { Mod1Mask,                     XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
+    { MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
 #endif
 
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
