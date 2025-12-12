@@ -2407,7 +2407,7 @@ search(const Arg *arg) {
 	names[nameslen - 1] = '\0';
 	
 	char dmenucmd[256];
-	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -l 10 -i -p 'Find client:'", names);
+	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -vi -l 10 -i -p 'Find client:'", names);
 	
 	FILE *fp = popen(dmenucmd, "r");
 	if (!fp) {
