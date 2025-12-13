@@ -183,10 +183,10 @@ static const Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 
     /* Focus windows with scroll wheel */
-	{ ClkClientWin,         MODKEY,         Button4,        focusstack,     {.i = +1 } },
-	{ ClkClientWin,         MODKEY,         Button5,        focusstack,     {.i = -1 } },
-	{ ClkRootWin,           MODKEY,         Button4,        focusstack,     {.i = +1 } },
-	{ ClkRootWin,           MODKEY,         Button5,        focusstack,     {.i = -1 } },
+	{ ClkClientWin,         MODKEY,         Button4,        focusstack,     {.i = -1 } },
+	{ ClkClientWin,         MODKEY,         Button5,        focusstack,     {.i = +1 } },
+	{ ClkRootWin,           MODKEY,         Button4,        focusstack,     {.i = -1 } },
+	{ ClkRootWin,           MODKEY,         Button5,        focusstack,     {.i = +1 } },
 
     /* Focus monitors with side mouse buttons */
 	{ ClkClientWin,         MODKEY,         Button8,        focusmon,       {.i = -1 } },
