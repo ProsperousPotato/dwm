@@ -25,8 +25,6 @@ static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
     "xhidecursor",  "",             "",         NULL,
     "xsetroot",     "-solid",       "black",    NULL,
-    "xmodmap",      "-e",           "keycode 66 = Escape",  NULL,
-    "xmodmap",      "-e",           "keycode 108 = Caps_Lock",  NULL,
     NULL
 };
 
@@ -90,16 +88,16 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_minus,  incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_equal,  incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.01} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.01} },
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.02} },
+	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.02} },
 	{ MODKEYTWO,                    XK_Tab,    zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                   XK_BackSpace,  setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-    { MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
-	{ MODKEY,                       XK_f,      togglefloating, {0} },
+    { MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
+	{ MODKEY,                       XK_Return, togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
@@ -114,7 +112,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_BackSpace,     quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
 
-	{ MODKEYTWO,                    XK_n,      spawn,          SHCMD(TERMINAL" -c stfloat -e newsboat") },
+	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ MODKEYTWO,                    XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
@@ -122,15 +120,11 @@ static const Key keys[] = {
 
 #ifdef __linux__
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
-    { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill -9 steam") },
+    { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill steam") },
 
-    { 0,         XF86XK_AudioRaiseVolume,      spawn,          SHCMD("amixer sset Master 5%+") },
-    { 0,         XF86XK_AudioLowerVolume,      spawn,          SHCMD("amixer sset Master 5%-") },
-    { 0,                XF86XK_AudioMute,      spawn,          SHCMD("amixer sset Master toggle") },
-
-    { MODKEY,                       XK_F2,     spawn,          SHCMD("amixer sset Master 5%+") },
-    { MODKEY,                       XK_F1,     spawn,          SHCMD("amixer sset Master 5%-") },
-    { MODKEY,                       XK_F3,     spawn,          SHCMD("amixer sset Master toggle") },
+    { 0,         XF86XK_AudioRaiseVolume,      spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
+    { 0,         XF86XK_AudioLowerVolume,      spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
+    { 0,                XF86XK_AudioMute,      spawn,          SHCMD("amixer sset Master toggle 1> /dev/null") },
 
     { MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
 #endif
@@ -149,27 +143,17 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_o,      togglemouse,    {0} }, 
 
-	{ MODKEY,                       XK_KP_Down,    moveresize,     {.v = "0x 15y 0w 0h" } },
-	{ MODKEY,                       XK_KP_Up,      moveresize,     {.v = "0x -15y 0w 0h" } },
-	{ MODKEY,                       XK_KP_Right,   moveresize,     {.v = "15x 0y 0w 0h" } },
-	{ MODKEY,                       XK_KP_Left,    moveresize,     {.v = "-15x 0y 0w 0h" } },
-	{ MODKEY,                       XK_KP_Begin,   togglefloating, {0} },
-    { MODKEY|ShiftMask,             XK_KP_Begin,   togglefullscr,  {0} },
+    // move (rightmost 'wasd' like cluster of keys in ISO layout)
+	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 15y 0w 0h" } },
+	{ MODKEY,                   XK_bracketleft, moveresize,     {.v = "0x -15y 0w 0h" } },
+	{ MODKEY,                   XK_numbersign,  moveresize,     {.v = "15x 0y 0w 0h" } },
+	{ MODKEY,                   XK_semicolon,   moveresize,     {.v = "-15x 0y 0w 0h" } },
 
-	{ MODKEY,                       XK_KP_Home,    moveresize,     {.v = "-15x -15y 0w 0h" } }, /* Diagonal Left && Up */
-	{ MODKEY,                       XK_KP_Prior,   moveresize,     {.v = "15x -15y 0w 0h" } }, /* Diagonal Right && Up */
-	{ MODKEY,                       XK_KP_End,     moveresize,     {.v = "-15x 15y 0w 0h" } }, /* Diagonal Left && Down */
-	{ MODKEY,                       XK_KP_Next,    moveresize,     {.v = "15x 15y 0w 0h" } }, /* Diagonal Right && Down */
-
-	{ MODKEY|ShiftMask,             XK_KP_Down,    moveresize,     {.v = "0x 0y 0w 15h" } },
-	{ MODKEY|ShiftMask,             XK_KP_Up,      moveresize,     {.v = "0x 0y 0w -15h" } },
-	{ MODKEY|ShiftMask,             XK_KP_Right,   moveresize,     {.v = "0x 0y 15w 0h" } },
-	{ MODKEY|ShiftMask,             XK_KP_Left,    moveresize,     {.v = "0x 0y -15w 0h" } },
-
-	{ MODKEY|ShiftMask,             XK_KP_Home,    moveresize,     {.v = "0x 0y -15w -15h" } }, /* Diagonal Left && Up */
-	{ MODKEY|ShiftMask,             XK_KP_Prior,   moveresize,     {.v = "0x 0y 15w -15h" } }, /* Diagonal Right && Up */
-	{ MODKEY|ShiftMask,             XK_KP_End,     moveresize,     {.v = "0x 0y -15w 15h" } }, /* Diagonal Left && Down */
-	{ MODKEY|ShiftMask,             XK_KP_Next,    moveresize,     {.v = "0x 0y 15w 15h" } }, /* Diagonal Right && Down */
+    // resize (rightmost 'wasd' like cluster of keys in ISO layout)
+	{ MODKEY|ShiftMask,         XK_apostrophe,  moveresize,     {.v = "0x 0y 0w 15h" } },
+	{ MODKEY|ShiftMask,         XK_bracketleft, moveresize,     {.v = "0x 0y 0w -15h" } },
+	{ MODKEY|ShiftMask,         XK_numbersign,  moveresize,     {.v = "0x 0y 15w 0h" } },
+	{ MODKEY|ShiftMask,         XK_semicolon,   moveresize,     {.v = "0x 0y -15w 0h" } },
 };
 
 #define Button8 8 // Lowest side mouse button
