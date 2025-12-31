@@ -161,20 +161,21 @@ static const Key keys[] = {
 
 /* button definitions */
 static const Button buttons[] = {
-	/* click                event mask      button          function        argument */
-	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
-	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+   	/* click                event mask         button          function        argument */
+   	{ ClkClientWin,         MODKEY,            Button1,        movemouse,      {0} }, // regular window move
+   	{ ClkClientWin,         MODKEY|ShiftMask,  Button1,        movemouse,      {.i = 1} }, // tiled window move
+   	{ ClkClientWin,         MODKEY,            Button2,        togglefloating, {0} },
+   	{ ClkClientWin,         MODKEY,            Button3,        resizemouse,    {0} },
 
     /* Focus windows with scroll wheel */
-	{ ClkClientWin,         MODKEY,         Button4,        focusstack,     {.i = -1 } },
-	{ ClkClientWin,         MODKEY,         Button5,        focusstack,     {.i = +1 } },
-	{ ClkRootWin,           MODKEY,         Button4,        focusstack,     {.i = -1 } },
-	{ ClkRootWin,           MODKEY,         Button5,        focusstack,     {.i = +1 } },
+	{ ClkClientWin,         MODKEY,            Button4,        focusstack,     {.i = -1 } },
+	{ ClkClientWin,         MODKEY,            Button5,        focusstack,     {.i = +1 } },
+	{ ClkRootWin,           MODKEY,            Button4,        focusstack,     {.i = -1 } },
+	{ ClkRootWin,           MODKEY,            Button5,        focusstack,     {.i = +1 } },
 
     /* Focus monitors with side mouse buttons */
-	{ ClkClientWin,         MODKEY,         Button8,        focusmon,       {.i = -1 } },
-    { ClkClientWin,         MODKEY,         Button9,        focusmon,       {.i = +1 } },
-	{ ClkRootWin,           MODKEY,         Button8,        focusmon,       {.i = -1 } },
-    { ClkRootWin,           MODKEY,         Button9,        focusmon,       {.i = +1 } },
+	{ ClkClientWin,         MODKEY,            Button8,        focusmon,       {.i = -1 } },
+    { ClkClientWin,         MODKEY,            Button9,        focusmon,       {.i = +1 } },
+	{ ClkRootWin,           MODKEY,            Button8,        focusmon,       {.i = -1 } },
+    { ClkRootWin,           MODKEY,            Button9,        focusmon,       {.i = +1 } },
 };
