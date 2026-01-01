@@ -162,11 +162,10 @@ static const Key keys[] = {
 /* button definitions */
 static const Button buttons[] = {
    	/* click                event mask         button          function        argument */
-   	{ ClkClientWin,         MODKEY,            Button1,        movemouse,      {0} }, // regular window move
-   	{ ClkClientWin,         MODKEY|ShiftMask,  Button1,        movemouse,      {.i = 1} }, // tiled window move
-	{ ClkClientWin,         MODKEY|ShiftMask,  Button3,        dragmfact,      {0} },
+   	{ ClkClientWin,         MODKEY|ShiftMask,  Button1,        movemouse,      {0} }, // regular window move
+   	{ ClkClientWin,         MODKEY,            Button1,        movemouse,      {.i = 1} }, // tiled window move
    	{ ClkClientWin,         MODKEY,            Button2,        togglefloating, {0} },
-   	{ ClkClientWin,         MODKEY,            Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,            Button3,        clientresize,   {0} },
 
     /* Focus windows with scroll wheel */
 	{ ClkClientWin,         MODKEY,            Button4,        focusstack,     {.i = -1 } },

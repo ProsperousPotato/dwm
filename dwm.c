@@ -90,6 +90,7 @@ typedef struct Client Client;
 struct Client {
 	char name[256];
 	float mina, maxa;
+	float cfact;
 	int x, y, w, h;
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh, hintsvalid;
@@ -195,6 +196,7 @@ static void resize(Client *c, int x, int y, int w, int h, int interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
 static void restack(Monitor *m);
+static void clientresize(const Arg *arg);
 static void run(void);
 static void scan(void);
 static int sendevent(Client *c, Atom proto);
@@ -701,63 +703,35 @@ void
 dragmfact(const Arg *arg)
 {
 	unsigned int n;
-	int py, px; // pointer coordinates
-	int ax, ay, aw, ah; // area position, width and height
-	int center = 0, horizontal = 0, mirror = 0, fixed = 0; // layout configuration
-	double fact;
-	Monitor *m;
+	int px, py; // pointer coordinates
+	int dist_x, dist_y;
+	int horizontal = 0; // layout configuration
+	float mfact, cfact, cf, cw, ch, mw, mh;
+	Client *c;
+	Monitor *m = selmon;
 	XEvent ev;
 	Time lasttime = 0;
 
-	m = selmon;
-
-	Client *c;
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-
-	ax = m->wx;
-	ay = m->wy;
-	ah = m->wh;
-	aw = m->ww;
-
-	if (!n)
+	if (!(c = m->sel) || !n || !m->lt[m->sellt]->arrange)
 		return;
-
-	/* do not allow mfact to be modified under certain conditions */
-	if (!m->lt[m->sellt]->arrange                            // floating layout
-		|| (!fixed && m->nmaster && n <= m->nmaster)         // no master
-		|| m->lt[m->sellt]->arrange == &monocle)
-		return;
-
-	if (center) {
-		if (horizontal) {
-			px = ax + aw / 2;
-			py = ay + ah / 2 + ah * m->mfact / 2.0;
-		} else { // vertical split
-			px = ax + aw / 2 + aw * m->mfact / 2.0;
-			py = ay + ah / 2;
-		}
-	} else if (horizontal) {
-		px = ax + aw / 2;
-		if (mirror)
-			py = ay + (ah * (1.0 - m->mfact));
-		else
-			py = ay + (ah * m->mfact);
-	} else { // vertical split
-		if (mirror)
-			px = ax + (aw * m->mfact);
-		else
-			px = ax + (aw * m->mfact);
-		py = ay + ah / 2;
-	}
 
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
-		None, cursor[horizontal ? CurResizeVertArrow : CurResizeHorzArrow]->cursor, CurrentTime) != GrabSuccess)
+		None, cursor[CurResize]->cursor, CurrentTime) != GrabSuccess)
 		return;
-	XWarpPointer(dpy, None, root, 0, 0, 0, 0, px, py);
+
+	if (!getrootptr(&px, &py))
+		return;
+
+	cf = c->cfact;
+	ch = c->h;
+	cw = c->w;
+	mw = m->ww * m->mfact;
+	mh = m->wh * m->mfact;
 
 	do {
 		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
-		switch(ev.type) {
+		switch (ev.type) {
 		case ConfigureRequest:
 		case Expose:
 		case MapRequest:
@@ -766,35 +740,22 @@ dragmfact(const Arg *arg)
 		case MotionNotify:
 			if ((ev.xmotion.time - lasttime) <= (1000 / 40))
 				continue;
-			if (lasttime != 0) {
-				px = ev.xmotion.x;
-				py = ev.xmotion.y;
-			}
 			lasttime = ev.xmotion.time;
 
-			if (center)
-				if (horizontal)
-					if (py - ay > ah / 2)
-						fact = (double) 1.0 - (ay + ah - py) * 2 / (double) ah;
-					else
-						fact = (double) 1.0 - (py - ay) * 2 / (double) ah;
-				else
-					if (px - ax > aw / 2)
-						fact = (double) 1.0 - (ax + aw - px) * 2 / (double) aw;
-					else
-						fact = (double) 1.0 - (px - ax) * 2 / (double) aw;
-			else
-				if (horizontal)
-					fact = (double) (py - ay) / (double) ah;
-				else
-					fact = (double) (px - ax) / (double) aw;
+			dist_x = ev.xmotion.x - px;
+			dist_y = ev.xmotion.y - py;
 
-			if (!center && mirror)
-				fact = 1.0 - fact;
+			if (horizontal) {
+				cfact = (float) cf * (cw + dist_x) / cw;
+				mfact = (float) (mh + dist_y) / m->wh;
+			} else {
+				cfact = (float) cf * (ch - dist_y) / ch;
+				mfact = (float) (mw + dist_x) / m->ww;
+			}
 
-			setmfact(&((Arg) { .f = 1.0 + fact }));
-			px = ev.xmotion.x;
-			py = ev.xmotion.y;
+			c->cfact = MAX(0.25, MIN(4.0, cfact));
+			m->mfact = MAX(0.05, MIN(0.95, mfact));
+			arrangemon(m);
 			break;
 		}
 	} while (ev.type != ButtonRelease);
@@ -1128,6 +1089,7 @@ manage(Window w, XWindowAttributes *wa)
 	c->w = c->oldw = wa->width;
 	c->h = c->oldh = wa->height;
 	c->oldbw = wa->border_width;
+	c->cfact = 1.0;
 
 	updatetitle(c);
 	if (XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
@@ -1581,6 +1543,23 @@ resizemouse(const Arg *arg)
 }
 
 void
+clientresize(const Arg *arg)
+{
+	Client *c;
+
+	if (!(c = selmon->sel))
+		return;
+
+	if (c->isfullscreen)
+		return;
+
+	if (c->isfloating || !selmon->lt[selmon->sellt]->arrange)
+		resizemouse(arg);
+	else
+		dragmfact(arg);
+}
+
+void
 restack(Monitor *m)
 {
 	Client *c;
@@ -1941,9 +1920,15 @@ void
 tile(Monitor *m)
 {
 	unsigned int i, n, h, mw, my, ty;
+	float mfacts = 0, sfacts = 0;
 	Client *c;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+		if (n < m->nmaster)
+			mfacts += c->cfact;
+		else
+			sfacts += c->cfact;
+	}
 	if (n == 0)
 		return;
 
@@ -1953,15 +1938,17 @@ tile(Monitor *m)
 		mw = m->ww;
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+			h = (m->wh - my) * (c->cfact / mfacts);
 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
 			if (my + HEIGHT(c) < m->wh)
 				my += HEIGHT(c);
+			mfacts -= c->cfact;
 		} else {
-			h = (m->wh - ty) / (n - i);
+			h = (m->wh - ty) * (c->cfact / sfacts);
 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
 			if (ty + HEIGHT(c) < m->wh)
 				ty += HEIGHT(c);
+			sfacts -= c->cfact;
 		}
 }
 
