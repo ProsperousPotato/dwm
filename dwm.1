@@ -37,6 +37,11 @@ Spawn
 .BR dmenu(1)
 for launching other programs.
 .TP
+.B Alt\-space
+Start
+.BR st(1)
+in a floating window.
+.TP
 .B Super\-,
 Focus previous screen, if any.
 .TP
@@ -49,22 +54,26 @@ Send focused window to previous screen, if any.
 .B Super\-Shift\-.
 Send focused window to next screen, if any.
 .TP
-.B Super\-b
+.B Super\-o
 Toggles mouse on and off.
 .TP
 .B Super\-p
-Spawn dmenu to search through open windows on unused tags and move to the tag
+Spawn dmenu to search through open windows on non-visible tags and move to the tag
 which the selected window is on.
 .TP
 .B Super\-Shift\-p
-Spawn dmenu to search through open windows on unused tags and send them to 
+Spawn dmenu to search through open windows on non-visible tags and send them to 
 currently active tag.
+.TP
+.B Super\-Shift\-q
+Spawn dmenu to search through open windows on non-visible tags and kill selected
+window
 .TP
 .B Super\-t
 Sets tiled layout.
 .TP
 .B Super\-f
-Toggles floating for focused window
+Sets floating layout.
 .TP
 .B Super\-m
 Sets monocle layout.
@@ -75,10 +84,10 @@ Focus next window.
 .B Super\-k
 Focus previous window.
 .TP
-.B Super\-i
+.B Super\-minus
 Increase number of windows in master area.
 .TP
-.B Super\-u
+.B Super\-equals
 Decrease number of windows in master area.
 .TP
 .B Super\-l
@@ -93,11 +102,14 @@ Zooms/cycles focused window to/from master area (tiled layouts only).
 .B Super\-q
 Close focused window.
 .TP
-.B Super\-Shift\-f
+.B Super\-Return
+Toggle floating for focused window.
+.TP
+.B Super\-Shift\-Return
 Toggle fullscreen for focused window.
 .TP
 .B Super\-Tab
-Toggles to the previously selected tags.
+Toggles to the previously selected tag.
 .TP
 .B Super\-Shift\-[1..n]
 Apply nth tag to focused window.
@@ -117,21 +129,103 @@ View all windows with any tag.
 .B Super\-Control\-[1..n]
 Add/remove all windows with nth tag to/from the view.
 .TP
-.B Super\-Shift\-End
+.B Super\-Control\-Shift\-BackSpace
 Quit dwm.
 .TP
 .B Super\-Shift\-r
 Restart dwm.
+.TP
+.B Super\-n
+Launch newsboat RSS reader in an
+.BR st(1)
+window.
+.TP
+.B Super\-Escape
+Launch htop in an
+.BR st(1)
+window.
+.TP
+.B Alt\-Escape
+Launch htop in a floating
+.BR st(1)
+window.
+.TP
+.B Super\-x
+Run xkill to kill an X window.
+.TP
+.B Super\-w
+Launch web browser.
+.TP
+.B Super\-Shift\-w
+Launch alternate web browser.
+.TP
+.B Super\-a
+Swap focus between last focused window.
+.TP
+.B Super\-PrintScreen
+Screenshot
+
+
+.SS Moving floating windows
+.TP
+.B Rightmost 'wasd' like cluster of keys in GB ISO keyboard layout
+ 
+.TP
+.B Super\-apostrophe
+Move focused floating window down
+.TP
+.B Super\-bracketleft
+Move focused floating window up
+.TP
+.B Super\-hash
+Move focused floating window right
+.TP
+.B Super\-semicolon
+Move focused floating window left
+
+.SS Resizing floating windows
+.TP
+.B Rightmost 'wasd' like cluster of keys in GB ISO keyboard layout
+
+.TP
+.B Super\-Shift\-apostrophe
+Resize focused floating window down
+.TP
+.B Super\-Shift\-bracketleft
+Resize focused floating window up
+.TP
+.B Super\-Shift\-hash
+Resize focused floating window right
+.TP
+.B Super\-Shift\-semicolon
+Resize focused floating window left
+
+
 .SS Mouse commands
 .TP
 .B Super\-LMB
+Tiled windows will be swapped through the positions of other tiled windows. Floating windows will be moved as normal
+.TP
+.B Super\-Shift\-LMB
 Move focused window while dragging. Tiled windows will be toggled to the floating state.
 .TP
 .B Super\-MMB
 Toggles focused window between floating and tiled state.
 .TP
 .B Super\-RMB
-Resize focused window while dragging. Tiled windows will be toggled to the floating state.
+Tiled windows will have the area they are occupying in the layout resized, while floating windows will be resized normally
+.TP
+.B Super\-ScrollWheelDown
+Focus next window.
+.TP
+.B Super\-ScrollWheelUp
+Focus previous window.
+.TP
+.B Super\-Button8 (Side mouse button)
+Focus previous screen, if any.
+.TP
+.B Super\-Button9 (Side mouse button)
+Focus next screen, if any.
 .SH CUSTOMIZATION
 dwm is customized by creating a custom config.h and (re)compiling the source
 code. This keeps it fast, secure and simple.
