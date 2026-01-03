@@ -211,6 +211,7 @@ static void showhide(Client *c);
 static void sighup(int unused);
 static void sigterm(int unused);
 static void spawn(const Arg *arg);
+static void swapfocus();
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
@@ -246,6 +247,7 @@ static Client *termforwin(const Client *c);
 static pid_t winpid(Window w);
 
 /* variables */
+static Client *prevclient = NULL;
 static const char broken[] = "broken";
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
@@ -1891,6 +1893,15 @@ spawn(const Arg *arg)
 }
 
 void
+swapfocus()
+{
+	Client *c;
+	for(c = selmon->clients; c && c != prevclient; c = c->next) ;
+	if(c == prevclient)
+		focus(prevclient);
+}
+
+void
 tag(const Arg *arg)
 {
 	if (selmon->sel && arg->ui & TAGMASK) {
@@ -2014,6 +2025,7 @@ unfocus(Client *c, int setfocus)
 {
 	if (!c)
 		return;
+	prevclient = c;
 	grabbuttons(c, 0);
     if (c->isfloating)
         XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColFloat].pixel);
@@ -2485,6 +2497,7 @@ void
 zoom(const Arg *arg)
 {
 	Client *c = selmon->sel;
+	prevclient = selmon->clients;
 
 	if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
 		return;

@@ -2,7 +2,7 @@
 
 /* Constants */
 #define TERMINAL "st"
-#define BROWSER "icecat"
+#define BROWSER "glide"
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
@@ -117,8 +117,11 @@ static const Key keys[] = {
 	{ MODKEYTWO,                    XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
     { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
     { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
+    { MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
+	{ MODKEY,                       XK_a,      swapfocus,      {0} },
 
 #ifdef __linux__
+    { MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },
     { MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
     { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill steam") },
 
