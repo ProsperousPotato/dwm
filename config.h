@@ -7,7 +7,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
-static const int refreshrate        = 180;
+static const int refreshrate        = 60;
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int mousedefault       = 1;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
@@ -24,7 +24,7 @@ static const char *colors[][5]      = {
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
     "xhidecursor",  "",             "",         NULL,
-    "xsetroot",     "-solid",       "black",    NULL,
+    "hsetroot",     "-fill",       "/usr/share/wallpapers/windows7.jpg",    NULL,
     NULL
 };
 
@@ -119,6 +119,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
     { MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
 	{ MODKEY,                       XK_a,      swapfocus,      {0} },
+	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("scrcpy") },
 
 #ifdef __linux__
     { MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },
