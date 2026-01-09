@@ -122,6 +122,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_a,      swapfocus,      {0} },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("scrcpy") },
 	{ MODKEY,                       XK_BackSpace, swapfocus,   {0} },
+	{ MODKEY,                       XK_r,      resetmfact,     {0} },
 
 #ifdef __linux__
     { MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },
