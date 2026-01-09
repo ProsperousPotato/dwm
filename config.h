@@ -3,6 +3,7 @@
 /* Constants */
 #define TERMINAL "st"
 #define BROWSER "glide"
+#define WALLPAPER "/usr/share/wallpapers/windows7.jpg"
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
@@ -24,7 +25,7 @@ static const char *colors[][5]      = {
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
     "xhidecursor",  "",             "",         NULL,
-    "hsetroot",     "-fill",       "/usr/share/wallpapers/windows7.jpg",    NULL,
+    "hsetroot",     "-fill",        WALLPAPER,  NULL,
     NULL
 };
 
@@ -109,8 +110,8 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
 
-	{ MODKEY|ShiftMask|ControlMask, XK_BackSpace,     quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} }, 
+	{ MODKEY|ShiftMask|ControlMask, XK_BackSpace,    quit,     {0} },
+	{ MODKEY|ShiftMask,             XK_BackSpace,    quit,     {1} }, 
 
 	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
@@ -120,6 +121,7 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
 	{ MODKEY,                       XK_a,      swapfocus,      {0} },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("scrcpy") },
+	{ MODKEY,                       XK_BackSpace, swapfocus,   {0} },
 
 #ifdef __linux__
     { MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },

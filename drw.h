@@ -4,14 +4,6 @@ typedef struct {
 	Cursor cursor;
 } Cur;
 
-typedef struct Fnt {
-	Display *dpy;
-	unsigned int h;
-	XftFont *xfont;
-	FcPattern *pattern;
-	struct Fnt *next;
-} Fnt;
-
 enum { ColFg, ColBg, ColBorder, ColFloat, ColMaster }; /* Clr scheme index */
 typedef XftColor Clr;
 
@@ -23,18 +15,11 @@ typedef struct {
 	Drawable drawable;
 	GC gc;
 	Clr *scheme;
-	Fnt *fonts;
 } Drw;
 
 /* Drawable abstraction */
 Drw *drw_create(Display *dpy, int screen, Window win, unsigned int w, unsigned int h);
-void drw_resize(Drw *drw, unsigned int w, unsigned int h);
 void drw_free(Drw *drw);
-
-/* Fnt abstraction */
-Fnt *drw_fontset_create(Drw* drw, const char *fonts[], size_t fontcount);
-void drw_fontset_free(Fnt* set);
-void drw_font_getexts(Fnt *font, const char *text, unsigned int len, unsigned int *w, unsigned int *h);
 
 /* Colorscheme abstraction */
 void drw_clr_create(Drw *drw, Clr *dest, const char *clrname);
