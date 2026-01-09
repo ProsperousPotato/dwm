@@ -8,8 +8,6 @@
 #include "drw.h"
 #include "util.h"
 
-#define UTF_INVALID 0xFFFD
-
 Drw *
 drw_create(Display *dpy, int screen, Window root, unsigned int w, unsigned int h)
 {
@@ -42,8 +40,8 @@ drw_clr_create(Drw *drw, Clr *dest, const char *clrname)
 		return;
 
 	if (!XftColorAllocName(drw->dpy, DefaultVisual(drw->dpy, drw->screen),
-	                       DefaultColormap(drw->dpy, drw->screen),
-	                       clrname, dest))
+				DefaultColormap(drw->dpy, drw->screen),
+				clrname, dest))
 		die("error, cannot allocate color '%s'", clrname);
 
 	dest->pixel |= 0xff << 24;

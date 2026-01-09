@@ -24,9 +24,9 @@ static const char *colors[][5]      = {
 /* autostart */
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
-    "xhidecursor",  "",             "",         NULL,
-    "hsetroot",     "-fill",        WALLPAPER,  NULL,
-    NULL
+	"xhidecursor",  "",             "",         NULL,
+	"hsetroot",     "-fill",        WALLPAPER,  NULL,
+	NULL
 };
 
 /* tagging */
@@ -38,17 +38,17 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class         instance          title           tags mask  isfloating  isterminal  noswallow  monitor */
-    { "steam",       "steamwebhelper", NULL,           0,         1,          0,          0,         -1 },
-    { "Steam",       "Steam",          NULL,           0,         1,          0,          0,         -1 },
-    { "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
-    { "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
-    { "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
-    { "st-256color", "st-256color",    NULL,           0,         0,          1,          1,         -1 },
-    { "stfloat",     "st-256color",    NULL,           0,         1,          1,          1,         -1 },
-    { "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
-    { "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
-    { "steam_app_1237950","steam_app_1237950",NULL,    0,         1,          0,          1,         -1 },
-    { NULL,          NULL,             "Event Tester", 0,         0,          0,          1,         -1 },
+	{ "steam",       "steamwebhelper", NULL,           0,         1,          0,          0,         -1 },
+	{ "Steam",       "Steam",          NULL,           0,         1,          0,          0,         -1 },
+	{ "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
+	{ "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
+	{ "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
+	{ "st-256color", "st-256color",    NULL,           0,         0,          1,          1,         -1 },
+	{ "stfloat",     "st-256color",    NULL,           0,         1,          1,          1,         -1 },
+	{ "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
+	{ "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
+	{ "steam_app_1237950","steam_app_1237950",NULL,    0,         1,          0,          1,         -1 },
+	{ NULL,          NULL,             "Event Tester", 0,         0,          0,          1,         -1 },
 };
 
 /* layout(s) */
@@ -60,8 +60,8 @@ static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ NULL,      tile },    /* first entry is default */
-    { NULL,      NULL },
-    { NULL,      monocle },
+	{ NULL,      NULL },
+	{ NULL,      monocle },
 };
 
 /* key definitions */
@@ -82,7 +82,7 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_d,      spawn,          SHCMD("dmenu_run") },
 	{ MODKEYTWO,                    XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -97,7 +97,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-    { MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
+	{ MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
 	{ MODKEY,                       XK_Return, togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
@@ -116,33 +116,33 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ MODKEYTWO,                    XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-    { MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
-    { MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
-    { MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
+	{ MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
+	{ MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
+	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
 	{ MODKEY,                       XK_a,      swapfocus,      {0} },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("scrcpy") },
 	{ MODKEY,                       XK_BackSpace, swapfocus,   {0} },
 	{ MODKEY,                       XK_r,      resetmfact,     {0} },
 
 #ifdef __linux__
-    { MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },
-    { MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
-    { MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill steam") },
+	{ MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },
+	{ MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill steam") },
 
-    { 0,         XF86XK_AudioRaiseVolume,      spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
-    { 0,         XF86XK_AudioLowerVolume,      spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
-    { 0,                XF86XK_AudioMute,      spawn,          SHCMD("amixer sset Master toggle 1> /dev/null") },
+	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
+	{ 0,         XF86XK_AudioLowerVolume,      spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
+	{ 0,                XF86XK_AudioMute,      spawn,          SHCMD("amixer sset Master toggle 1> /dev/null") },
 
-    { MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
+	{ MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
 #endif
 
 #ifdef __OpenBSD__
-    { MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
+	{ MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
 #endif
 
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
-    { MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
 
 	{ MODKEY,                       XK_p,      search,         {.i = 0} }, 
 	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} }, 
@@ -150,13 +150,13 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_o,      togglemouse,    {0} }, 
 
-    // move (rightmost 'wasd' like cluster of keys in ISO layout)
+	// move (rightmost 'wasd' like cluster of keys in ISO layout)
 	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 15y 0w 0h" } },
 	{ MODKEY,                   XK_bracketleft, moveresize,     {.v = "0x -15y 0w 0h" } },
 	{ MODKEY,                   XK_numbersign,  moveresize,     {.v = "15x 0y 0w 0h" } },
 	{ MODKEY,                   XK_semicolon,   moveresize,     {.v = "-15x 0y 0w 0h" } },
 
-    // resize (rightmost 'wasd' like cluster of keys in ISO layout)
+	// resize (rightmost 'wasd' like cluster of keys in ISO layout)
 	{ MODKEY|ShiftMask,         XK_apostrophe,  moveresize,     {.v = "0x 0y 0w 15h" } },
 	{ MODKEY|ShiftMask,         XK_bracketleft, moveresize,     {.v = "0x 0y 0w -15h" } },
 	{ MODKEY|ShiftMask,         XK_numbersign,  moveresize,     {.v = "0x 0y 15w 0h" } },
@@ -168,21 +168,21 @@ static const Key keys[] = {
 
 /* button definitions */
 static const Button buttons[] = {
-   	/* click                event mask         button          function        argument */
-   	{ ClkClientWin,         MODKEY|ShiftMask,  Button1,        movemouse,      {0} }, // regular window move
-   	{ ClkClientWin,         MODKEY,            Button1,        movemouse,      {.i = 1} }, // tiled window move
-   	{ ClkClientWin,         MODKEY,            Button2,        togglefloating, {0} },
+	/* click                event mask         button          function        argument */
+	{ ClkClientWin,         MODKEY|ShiftMask,  Button1,        movemouse,      {0} }, // regular window move
+	{ ClkClientWin,         MODKEY,            Button1,        movemouse,      {.i = 1} }, // tiled window move
+	{ ClkClientWin,         MODKEY,            Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,            Button3,        clientresize,   {0} },
 
-    /* Focus windows with scroll wheel */
+	/* Focus windows with scroll wheel */
 	{ ClkClientWin,         MODKEY,            Button4,        focusstack,     {.i = -1 } },
 	{ ClkClientWin,         MODKEY,            Button5,        focusstack,     {.i = +1 } },
 	{ ClkRootWin,           MODKEY,            Button4,        focusstack,     {.i = -1 } },
 	{ ClkRootWin,           MODKEY,            Button5,        focusstack,     {.i = +1 } },
 
-    /* Focus monitors with side mouse buttons */
+	/* Focus monitors with side mouse buttons */
 	{ ClkClientWin,         MODKEY,            Button8,        focusmon,       {.i = -1 } },
-    { ClkClientWin,         MODKEY,            Button9,        focusmon,       {.i = +1 } },
+	{ ClkClientWin,         MODKEY,            Button9,        focusmon,       {.i = +1 } },
 	{ ClkRootWin,           MODKEY,            Button8,        focusmon,       {.i = -1 } },
-    { ClkRootWin,           MODKEY,            Button9,        focusmon,       {.i = +1 } },
+	{ ClkRootWin,           MODKEY,            Button9,        focusmon,       {.i = +1 } },
 };
