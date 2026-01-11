@@ -1174,8 +1174,6 @@ manage(Window w, XWindowAttributes *wa)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating)
 		XRaiseWindow(dpy, c->win);
-	if(c->isfloating || !selmon->lt[selmon->sellt]->arrange)
-		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColFloat].pixel);
 	attach(c);
 	attachstack(c);
 	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
@@ -1719,7 +1717,7 @@ search(const Arg *arg) {
 	names[nameslen - 1] = '\0';
 	
 	char dmenucmd[256];
-	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -vi -l 10 -i -p 'Find client:'", names);
+	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -l 10 -i -p 'Find client:'", names);
 	
 	FILE *fp = popen(dmenucmd, "r");
 	if (!fp) {
@@ -2153,8 +2151,17 @@ togglefloating(const Arg *arg)
 void
 togglefullscr(const Arg *arg)
 {
-  if(selmon->sel)
-	setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+	if(selmon->sel)
+		setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+	if (selmon->sel->isfloating)
+		XSetWindowBorder(dpy, selmon->sel->win, scheme[SchemeSel][ColFloat].pixel);
+	else {
+		if (selmon->sel == nexttiled(selmon->clients)) {
+			XSetWindowBorder(dpy, selmon->sel->win, scheme[SchemeSel][ColMaster].pixel);
+		} else {
+			XSetWindowBorder(dpy, selmon->sel->win, scheme[SchemeSel][ColBorder].pixel);
+		}
+	}
 }
 
 void
