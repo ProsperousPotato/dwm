@@ -880,7 +880,7 @@ focus(Client *c)
 
 	if (c == nexttiled(selmon->clients)) {
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColMaster].pixel);
-	} else if(c->isfloating || !selmon->lt[selmon->sellt]->arrange) {
+	} else if(c->isfloating) {
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColFloat].pixel);
 	} else {
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
@@ -1157,7 +1157,7 @@ manage(Window w, XWindowAttributes *wa)
 
 	if (c == nexttiled(selmon->clients)) {
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColMaster].pixel);
-	} else if(c->isfloating || !selmon->lt[selmon->sellt]->arrange) {
+	} else if(c->isfloating) {
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColFloat].pixel);
 	} else
 		XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColBorder].pixel);
@@ -2244,7 +2244,7 @@ unfocus(Client *c, int setfocus)
 		return;
 	prevclient = c;
 	grabbuttons(c, 0);
-	if (c->isfloating || !selmon->lt[selmon->sellt]->arrange)
+	if (c->isfloating)
 		XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColFloat].pixel);
 	else
 		XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
