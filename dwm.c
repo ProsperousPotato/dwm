@@ -2077,13 +2077,15 @@ swapfocus()
 {
 	int n = 0;
 	Client *c;
-	for(c = selmon->clients; c && c != prevclient; c = c->next);
 	for(c = selmon->clients; c; c = c->next) if(ISVISIBLE(c)) n++;;
 	if(n == 2) {
 		Arg arg = {.i = +1};
 		focusstack(&arg);
-	} else if(c == prevclient)
-		focus(prevclient);
+	} else {
+		for(c = selmon->clients; c && c != prevclient; c = c->next);
+		if(c == prevclient)
+			focus(prevclient);
+	}
 	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
