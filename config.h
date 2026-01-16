@@ -8,7 +8,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
-static const int refreshrate        = 60;
+static const int refreshrate        = 120;
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int mousedefault       = 1;        /* 1 means enable mouse by default */
 static const char col_gray1[]       = "#000000";
@@ -91,6 +91,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_equal,  incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.02} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.02} },
+	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.10} },
+	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.10} },
+	{ MODKEY,                       XK_b,      setcfact,       {.f =  0.00} },
 	{ MODKEYTWO,                    XK_Tab,    zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },

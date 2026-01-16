@@ -208,6 +208,7 @@ static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setlayout(const Arg *arg);
+static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static void showhide(Client *c);
@@ -1892,6 +1893,24 @@ setlayout(const Arg *arg)
 		arrange(selmon);
 }
 
+void
+setcfact(const Arg *arg) {
+	float f;
+	Client *c;
+
+	c = selmon->sel;
+
+	if(!arg || !c || !selmon->lt[selmon->sellt]->arrange)
+		return;
+	f = arg->f + c->cfact;
+	if(arg->f == 0.0)
+		f = 1.0;
+	else if(f < 0.25 || f > 4.0)
+		return;
+	c->cfact = f;
+	arrange(selmon);
+}
+
 /* arg > 1.0 will set mfact absolutely */
 void
 setmfact(const Arg *arg)
@@ -2056,9 +2075,14 @@ spawn(const Arg *arg)
 void
 swapfocus()
 {
+	int n = 0;
 	Client *c;
-	for(c = selmon->clients; c && c != prevclient; c = c->next) ;
-	if(c == prevclient)
+	for(c = selmon->clients; c && c != prevclient; c = c->next);
+	for(c = selmon->clients; c; c = c->next) if(ISVISIBLE(c)) n++;;
+	if(n == 2) {
+		Arg arg = {.i = +1};
+		focusstack(&arg);
+	} else if(c == prevclient)
 		focus(prevclient);
 	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
