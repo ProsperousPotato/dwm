@@ -2075,17 +2075,15 @@ spawn(const Arg *arg)
 void
 swapfocus()
 {
-	int n = 0;
 	Client *c;
-	for(c = selmon->clients; c; c = c->next) if(ISVISIBLE(c)) n++;;
-	if(n == 2) {
-		Arg arg = {.i = +1};
-		focusstack(&arg);
-	} else {
-		for(c = selmon->clients; c && c != prevclient; c = c->next);
-		if(c == prevclient)
-			focus(prevclient);
+	for(c = selmon->clients; c && c != prevclient; c = c->next);
+	if(c == prevclient && prevclient != selmon->sel) {
+		focus(prevclient);
+		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+		return;
 	}
+	Arg arg = {.i = +1};
+	focusstack(&arg);
 	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
