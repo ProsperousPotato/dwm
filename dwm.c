@@ -747,18 +747,16 @@ void
 dragmfact(const Arg *arg)
 {
 	unsigned int n;
-	int px, py; // pointer coordinates
+	int px, py; /* pointer coordinates */
 	int dist_x, dist_y;
-	int horizontal = 0; // layout configuration
-	float mfact, cfact, cf, cw, ch, mw, mh;
+	float mfact, cfact, cf, ch, mw;
 	Client *c;
 	Monitor *m = selmon;
 	XEvent ev;
 	Time lasttime = 0;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if (!(c = m->sel) || !n || !m->lt[m->sellt]->arrange)
-		return;
+	if (!(c = m->sel) || !n || !m->lt[m->sellt]->arrange || m->lt[m->sellt]->arrange == &monocle) return;
 
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		None, cursor[CurResize]->cursor, CurrentTime) != GrabSuccess)
@@ -769,9 +767,7 @@ dragmfact(const Arg *arg)
 
 	cf = c->cfact;
 	ch = c->h;
-	cw = c->w;
 	mw = m->ww * m->mfact;
-	mh = m->wh * m->mfact;
 
 	do {
 		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
@@ -789,13 +785,8 @@ dragmfact(const Arg *arg)
 			dist_x = ev.xmotion.x - px;
 			dist_y = ev.xmotion.y - py;
 
-			if (horizontal) {
-				cfact = (float) cf * (cw + dist_x) / cw;
-				mfact = (float) (mh + dist_y) / m->wh;
-			} else {
-				cfact = (float) cf * (ch - dist_y) / ch;
-				mfact = (float) (mw + dist_x) / m->ww;
-			}
+			cfact = (float) cf * (ch - dist_y) / ch;
+			mfact = (float) (mw + dist_x) / m->ww;
 
 			c->cfact = MAX(0.25, MIN(4.0, cfact));
 			m->mfact = MAX(0.05, MIN(0.95, mfact));
@@ -1657,131 +1648,111 @@ scan(void)
 
 void
 search(const Arg *arg) {
-	Client *c;
+	Client *c, **clients = NULL;
 	Monitor *m;
-	char *names = NULL;
-	size_t namesize = 0;
-	size_t nameslen = 0;
-	int clientnum = 0;
-	Client **clients = NULL;
-	size_t clientsize = 0;
-	int mode = arg->i;
-	
+	char *names = NULL, ts[4 + (3 * LENGTH(tags))], selname[256], dmenucmd[256];
+	size_t namesize = 0, nameslen = 0, namelen, needed;
+	int clientnum = 0, clientsize = 0, mode = arg->i, i, tl, first;
+
 	for (m = mons; m; m = m->next) {
 		for (c = m->clients; c; c = c->next) {
-			if (!ISVISIBLE(c)) {
-				clientnum++;
-				
-				char ts[64] = "[";
-				int tl = 1;
-				int first = 1;
-				for (int i = 0; i < LENGTH(tags); i++) {
-					if (c->tags & (1 << i)) {
-						if (!first) tl += snprintf(ts + tl, sizeof(ts) - tl, ",");
-						tl += snprintf(ts + tl, sizeof(ts) - tl, "%d", i + 1);
-						first = 0;
-					}
-				}
-				tl += snprintf(ts + tl, sizeof(ts) - tl, "] ");
-				
-				size_t namelen = strlen(c->name);
-				size_t needed = nameslen + tl + namelen + 1;
-				
-				if (needed > namesize) {
-					namesize = needed * 2;
-					names = realloc(names, namesize);
-					if (!names)
-						die("search: realloc failed");
-				}
-				
-				if (clientnum > clientsize) {
-					clientsize = clientnum * 2;
-					clients = realloc(clients, clientsize * sizeof(Client *));
-					if (!clients)
-						die("search: realloc failed");
-				}
-				
-				strlcpy(names + nameslen, ts, namesize - nameslen);
-				nameslen += tl;
-				strlcpy(names + nameslen, c->name, namesize - nameslen);
+			if (ISVISIBLE(c))
+				continue;
 
-				nameslen += namelen;
-				names[nameslen] = '\n';
-				nameslen++;
-				
-				clients[clientnum - 1] = c;
+			clientnum++;
+
+			for (tl = 1, first = 1, ts[0] = '[', i = 0; i < LENGTH(tags); i++) {
+				if (c->tags & (1 << i)) {
+					if (!first) ts[tl++] = ',';
+					tl += snprintf(ts + tl, sizeof(ts) - tl, "%d", i + 1);
+					first = 0;
+				}
 			}
+			tl += snprintf(ts + tl, sizeof(ts) - tl, "] ");
+
+			namelen = strlen(c->name);
+			needed = nameslen + tl + namelen + 2;
+
+			if (needed > namesize) {
+				namesize = needed * 2;
+				if (!(names = realloc(names, namesize)))
+					die("search: realloc failed");
+			}
+
+			if (clientnum > clientsize) {
+				clientsize = clientnum * 2;
+				if (!(clients = realloc(clients, clientsize * sizeof(Client *))))
+					die("search: realloc failed");
+			}
+
+			memcpy(names + nameslen, ts, tl);
+			nameslen += tl;
+			memcpy(names + nameslen, c->name, namelen);
+			nameslen += namelen;
+			names[nameslen++] = '\n';
+
+			clients[clientnum - 1] = c;
 		}
 	}
-	
-	if (clientnum == 0)
+
+	if (!clientnum)
 		return;
-	
+
 	names[nameslen - 1] = '\0';
-	
-	char dmenucmd[256];
+
+	for (char *p = names; *p; p++) *p = (*p == '\'') ? '"' : *p;
+
 	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -l 10 -i -p 'Find client:'", names);
-	
+
 	FILE *fp = popen(dmenucmd, "r");
-	if (!fp) {
-		free(names);
-		free(clients);
-		return;
-	}
-	
-	char selname[256];
-	if (fgets(selname, sizeof(selname), fp) != NULL) {
-		size_t len = strlen(selname);
-		if (len > 0 && selname[len - 1] == '\n')
-			selname[len - 1] = '\0';
-		
+	if (!fp)
+		goto cleanup;
+
+	if (fgets(selname, sizeof(selname), fp)) {
+		char *nl = strchr(selname, '\n');
+		if (nl) *nl = '\0';
+
+		for (char *p = selname; *p; p++) *p = (*p == '"') ? '\'' : *p;
+
 		char *clientname = strchr(selname, ']');
 		if (clientname) {
 			clientname += 2;
-			
-			for (int i = 0; i < clientnum; i++) {
-				if (strcmp(clients[i]->name, clientname) == 0) {
-					Client *selclient = clients[i];
-					
-					if (mode == 1 || mode == 2) {
-						selclient->tags = selmon->tagset[selmon->seltags];
 
-						if (selclient->mon != selmon) {
-							detach(selclient);
-							detachstack(selclient);
-							selclient->mon = selmon;
-							attach(selclient);
-							attachstack(selclient);
-						}
+			for (i = 0; i < clientnum; i++) {
+				if (strcmp(clients[i]->name, clientname))
+					continue;
 
-						focus(selclient);
+				c = clients[i];
 
-						if (mode == 1) {
-							arrange(selmon);
-							if (selclient != nexttiled(selmon->clients)) {
-								zoom(0);
-							}
-						} else if (mode == 2)
-							killclient(0);
-
-					} else {
-						if (selclient->mon != selmon)
-							selmon = selclient->mon;
-						
-						Arg view_arg;
-						view_arg.ui = selclient->tags;
-						view(&view_arg);
-
-						focus(selclient);
+				if (mode == 1 || mode == 2) {
+					c->tags = selmon->tagset[selmon->seltags];
+					if (c->mon != selmon) {
+						detach(c);
+						detachstack(c);
+						c->mon = selmon;
+						attach(c);
+						attachstack(c);
 					}
-
-					break;
+					focus(c);
+					if (mode == 1) {
+						arrange(selmon);
+						if (c != nexttiled(selmon->clients))
+							zoom(0);
+					} else
+						killclient(0);
+				} else {
+					if (c->mon != selmon)
+						selmon = c->mon;
+					view(&(Arg){.ui = c->tags});
+					focus(c);
 				}
+				break;
 			}
 		}
 	}
-	
+
 	pclose(fp);
+cleanup:
 	free(names);
 	free(clients);
 }

@@ -98,7 +98,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEYTWO|ShiftMask,          XK_Return, togglefullscr,  {0} },
 	{ MODKEYTWO,                    XK_Return, togglefloating, {0} },
@@ -122,7 +122,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
 	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
-	{ MODKEY,                       XK_r,      resetmfact,     {0} },
+	{ MODKEY,                       XK_e,      resetmfact,     {0} },
 	{ MODKEY,                       XK_a,      swapfocus,      {0} },
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("scrcpy") },
 
