@@ -1258,6 +1258,9 @@ moveresize(const Arg *arg) {
 	if (sscanf((char *)arg->v, "%d%c %d%c %d%c %d%c", &x, &xAbs, &y, &yAbs, &w, &wAbs, &h, &hAbs) != 8)
 		return;
 
+	if (!ml)
+		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+
 	nw = c->w + w;
 	if (wAbs == 'W')
 		nw = w < selmon->mw - 2 * c->bw ? w : selmon->mw - 2 * c->bw;
@@ -1296,8 +1299,7 @@ moveresize(const Arg *arg) {
 	resize(c, nx, ny, nw, nh, True);
 
 	if (!ml) {
-		if (xqp && ox <= msx && (ox + ow) >= msx && oy <= msy && (oy + oh) >= msy)
-		{
+		if (xqp && ox <= msx && (ox + ow) >= msx && oy <= msy && (oy + oh) >= msy) {
 			nmx = c->x - ox + c->w - ow;
 			nmy = c->y - oy + c->h - oh;
 			if ((msx + nmx) > c->x && (msy + nmy) > c->y)
@@ -1600,7 +1602,7 @@ restack(Monitor *m)
 		for (c = m->stack; c; c = c->snext)
 			if (!c->isfloating && ISVISIBLE(c)) {
 				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
-				// wc.sibling = c->win;
+				wc.sibling = c->win;
 			}
 	}
 	XSync(dpy, False);
@@ -2082,8 +2084,7 @@ swapfocus()
 		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 		return;
 	}
-	Arg arg = {.i = +1};
-	focusstack(&arg);
+	focusstack(&(Arg){.i = +1});
 	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
@@ -2606,7 +2607,10 @@ getparentprocess(pid_t p)
 	if (!(f = fopen(buf, "r")))
 		return 0;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
 	fscanf(f, "%*u %*s %*c %u", &v);
+#pragma GCC diagnostic pop
 	fclose(f);
 #endif /* __linux__*/
 

@@ -93,15 +93,15 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.02} },
 	{ MODKEY|ShiftMask,             XK_h,      setcfact,       {.f = +0.10} },
 	{ MODKEY|ShiftMask,             XK_l,      setcfact,       {.f = -0.10} },
-	{ MODKEY,                       XK_b,      setcfact,       {.f =  0.00} },
+	{ MODKEY,                       XK_o,      setcfact,       {.f =  0.00} },
 	{ MODKEYTWO,                    XK_Tab,    zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
-	{ MODKEY,                       XK_Return, togglefloating, {0} },
+	{ MODKEYTWO|ShiftMask,          XK_Return, togglefullscr,  {0} },
+	{ MODKEYTWO,                    XK_Return, togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
@@ -127,7 +127,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_a,      spawn,          SHCMD("scrcpy") },
 
 #ifdef __linux__
-	{ MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -c -n 2 genlop -c") },
+	{ MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -g 60x10 -e watch -c -n 2 genlop -c") },
 	{ MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill steam") },
 
@@ -150,7 +150,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} }, 
 	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} }, 
 
-	{ MODKEY,                       XK_o,      togglemouse,    {0} }, 
+	{ MODKEY,                       XK_b,      togglemouse,    {0} }, 
 
 	// move (rightmost 'wasd' like cluster of keys in ISO layout)
 	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 15y 0w 0h" } },
