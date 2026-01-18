@@ -3,7 +3,7 @@
 /* Constants */
 #define TERMINAL "st"
 #define BROWSER "glide"
-#define WALLPAPER "/usr/share/wallpapers/windows7.jpg"
+#define WALLPAPER "/usr/share/backgrounds/windows7.jpg"
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
@@ -87,6 +87,8 @@ static const Key keys[] = {
 	{ MODKEYTWO,                    XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_minus,  incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_equal,  incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.02} },
@@ -100,8 +102,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEYTWO|ShiftMask,          XK_Return, togglefullscr,  {0} },
-	{ MODKEYTWO,                    XK_Return, togglefloating, {0} },
+	{ MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
+	{ MODKEY,                       XK_Return, togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },

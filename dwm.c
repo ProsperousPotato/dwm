@@ -187,8 +187,9 @@ static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
 static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
-static void moveresize(const Arg *arg);
 static void movemouse(const Arg *arg);
+static void moveresize(const Arg *arg);
+static void movestack(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
@@ -1231,75 +1232,6 @@ motionnotify(XEvent *e)
 }
 
 void
-moveresize(const Arg *arg) {
-	Client *c;
-	c = selmon->sel;
-	int x, y, w, h, nx, ny, nw, nh, ox, oy, ow, oh;
-	char xAbs, yAbs, wAbs, hAbs;
-	int msx, msy, dx, dy, nmx, nmy;
-	unsigned int dui;
-	Window dummy;
-
-	if (!c || !arg)
-		return;
-	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
-		return;
-	if (c->isfullscreen)
-		return;
-	if (sscanf((char *)arg->v, "%d%c %d%c %d%c %d%c", &x, &xAbs, &y, &yAbs, &w, &wAbs, &h, &hAbs) != 8)
-		return;
-
-	if (!ml)
-		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
-
-	nw = c->w + w;
-	if (wAbs == 'W')
-		nw = w < selmon->mw - 2 * c->bw ? w : selmon->mw - 2 * c->bw;
-
-	nh = c->h + h;
-	if (hAbs == 'H')
-		nh = h < selmon->mh - 2 * c->bw ? h : selmon->mh - 2 * c->bw;
-
-	nx = c->x + x;
-	if (xAbs == 'X') {
-		if (x < selmon->mx)
-			nx = selmon->mx;
-		else if (x > selmon->mx + selmon->mw)
-			nx = selmon->mx + selmon->mw - nw - 2 * c->bw;
-		else
-			nx = x;
-	}
-
-	ny = c->y + y;
-	if (yAbs == 'Y') {
-		if (y < selmon->my)
-			ny = selmon->my;
-		else if (y > selmon->my + selmon->mh)
-			ny = selmon->my + selmon->mh - nh - 2 * c->bw;
-		else
-			ny = y;
-	}
-
-	ox = c->x;
-	oy = c->y;
-	ow = c->w;
-	oh = c->h;
-
-	XRaiseWindow(dpy, c->win);
-	Bool xqp = XQueryPointer(dpy, root, &dummy, &dummy, &msx, &msy, &dx, &dy, &dui);
-	resize(c, nx, ny, nw, nh, True);
-
-	if (!ml) {
-		if (xqp && ox <= msx && (ox + ow) >= msx && oy <= msy && (oy + oh) >= msy) {
-			nmx = c->x - ox + c->w - ow;
-			nmy = c->y - oy + c->h - oh;
-			if ((msx + nmx) > c->x && (msy + nmy) > c->y)
-				XWarpPointer(dpy, None, None, 0, 0, 0, 0, nmx, nmy);
-		}
-	}
-}
-
-void
 movemouse(const Arg *arg)
 {
 	int x, y, ocx, ocy, nx, ny;
@@ -1412,6 +1344,119 @@ movemouse(const Arg *arg)
 		focus(NULL);
 	}
 }
+
+void
+moveresize(const Arg *arg) {
+	Client *c;
+	c = selmon->sel;
+	int x, y, w, h, nx, ny, nw, nh, ox, oy, ow, oh;
+	char xAbs, yAbs, wAbs, hAbs;
+	int msx, msy, dx, dy, nmx, nmy;
+	unsigned int dui;
+	Window dummy;
+
+	if (!c || !arg)
+		return;
+	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
+		return;
+	if (c->isfullscreen)
+		return;
+	if (sscanf((char *)arg->v, "%d%c %d%c %d%c %d%c", &x, &xAbs, &y, &yAbs, &w, &wAbs, &h, &hAbs) != 8)
+		return;
+
+	if (!ml)
+		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+
+	nw = c->w + w;
+	if (wAbs == 'W')
+		nw = w < selmon->mw - 2 * c->bw ? w : selmon->mw - 2 * c->bw;
+
+	nh = c->h + h;
+	if (hAbs == 'H')
+		nh = h < selmon->mh - 2 * c->bw ? h : selmon->mh - 2 * c->bw;
+
+	nx = c->x + x;
+	if (xAbs == 'X') {
+		if (x < selmon->mx)
+			nx = selmon->mx;
+		else if (x > selmon->mx + selmon->mw)
+			nx = selmon->mx + selmon->mw - nw - 2 * c->bw;
+		else
+			nx = x;
+	}
+
+	ny = c->y + y;
+	if (yAbs == 'Y') {
+		if (y < selmon->my)
+			ny = selmon->my;
+		else if (y > selmon->my + selmon->mh)
+			ny = selmon->my + selmon->mh - nh - 2 * c->bw;
+		else
+			ny = y;
+	}
+
+	ox = c->x;
+	oy = c->y;
+	ow = c->w;
+	oh = c->h;
+
+	XRaiseWindow(dpy, c->win);
+	Bool xqp = XQueryPointer(dpy, root, &dummy, &dummy, &msx, &msy, &dx, &dy, &dui);
+	resize(c, nx, ny, nw, nh, True);
+
+	if (!ml) {
+		if (xqp && ox <= msx && (ox + ow) >= msx && oy <= msy && (oy + oh) >= msy) {
+			nmx = c->x - ox + c->w - ow;
+			nmy = c->y - oy + c->h - oh;
+			if ((msx + nmx) > c->x && (msy + nmy) > c->y)
+				XWarpPointer(dpy, None, None, 0, 0, 0, 0, nmx, nmy);
+		}
+	}
+}
+
+void
+movestack(const Arg *arg) {
+	Client *c = NULL, *p = NULL, *pc = NULL, *i;
+
+	if(arg->i > 0) {
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
+		if(!c)
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isfloating); c = c->next);
+	} else {
+		for(i = selmon->clients; i != selmon->sel; i = i->next)
+			if(ISVISIBLE(i) && !i->isfloating)
+				c = i;
+		if(!c)
+			for(; i; i = i->next)
+				if(ISVISIBLE(i) && !i->isfloating)
+					c = i;
+	}
+	for(i = selmon->clients; i && (!p || !pc); i = i->next) {
+		if(i->next == selmon->sel)
+			p = i;
+		if(i->next == c)
+			pc = i;
+	}
+
+	if(c && c != selmon->sel) {
+		Client *temp = selmon->sel->next==c?selmon->sel:selmon->sel->next;
+		selmon->sel->next = c->next==selmon->sel?c:c->next;
+		c->next = temp;
+
+		if(p && p != c)
+			p->next = c;
+		if(pc && pc != selmon->sel)
+			pc->next = selmon->sel;
+
+		if(selmon->sel == selmon->clients)
+			selmon->clients = c;
+		else if(c == selmon->clients)
+			selmon->clients = selmon->sel;
+
+		arrange(selmon);
+	}
+}
+
 
 Client *
 nexttiled(Client *c)
