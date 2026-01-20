@@ -1745,9 +1745,7 @@ search(const Arg *arg) {
 
 	names[nameslen - 1] = '\0';
 
-	for (char *p = names; *p; p++) *p = (*p == '\'') ? '"' : *p;
-
-	snprintf(dmenucmd, sizeof(dmenucmd), "echo '%s' | dmenu -l 10 -i -p 'Find client:'", names);
+	snprintf(dmenucmd, sizeof(dmenucmd), "echo \"%s\" | dmenu -l 10 -i -p 'Find client:'", names);
 
 	FILE *fp = popen(dmenucmd, "r");
 	if (!fp)
@@ -1756,8 +1754,6 @@ search(const Arg *arg) {
 	if (fgets(selname, sizeof(selname), fp)) {
 		char *nl = strchr(selname, '\n');
 		if (nl) *nl = '\0';
-
-		for (char *p = selname; *p; p++) *p = (*p == '"') ? '\'' : *p;
 
 		char *clientname = strchr(selname, ']');
 		if (clientname) {
@@ -2512,6 +2508,8 @@ updatetitle(Client *c)
 		gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
 	if (c->name[0] == '\0') /* hack to mark broken clients */
 		strcpy(c->name, broken);
+
+	for (char *p = c->name; *p; p++) if (*p == '"') *p = '\'';
 }
 
 void
