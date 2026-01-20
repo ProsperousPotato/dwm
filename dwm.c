@@ -199,7 +199,7 @@ static void resize(Client *c, int x, int y, int w, int h, int interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
 static void restack(Monitor *m);
-static void resetmfact(const Arg *arg);
+static void resetfacts(const Arg *arg);
 static void run(void);
 static void scan(void);
 static void search(const Arg *arg);
@@ -1646,10 +1646,16 @@ restack(Monitor *m)
 }
 
 void
-resetmfact(const Arg *arg)
+resetfacts(const Arg *arg)
 {
+	Client *c;
+
 	if (!selmon->lt[selmon->sellt]->arrange) return;
 	selmon->mfact = mfact;
+
+	for (c = selmon->clients; c; c = c->next)
+		c->cfact = 1.0;
+
 	arrange(selmon);
 }
 
