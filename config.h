@@ -8,17 +8,13 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
-static const int refreshrate        = 120;
+static const int refreshrate        = 120;      /* limits the speed of moving && resizing windows */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
 static const int mousedefault       = 1;        /* 1 means enable mouse by default */
-static const char col_gray1[]       = "#000000";
-static const char col_gray2[]       = "#bbbbbb";
-static const char col_float[]       = "#770000";
-static const char col_master[]      = "#FF8700";
-static const char *colors[][5]      = {
-	/*               fg         bg          border      float      master */
-	[SchemeNorm] = { col_gray2, col_gray1,  col_gray1,  col_gray1, col_gray1   },
-	[SchemeSel]  = { col_gray1, col_gray2,  col_gray2,  col_float, col_master  },
+static const char *colors[][3]      = {
+	/*               border      float      master      */
+	[SchemeNorm] = { "#000000",  "#000000", "#000000"   },
+	[SchemeSel]  = { "#bbbbbb",  "#770000", "#FF8700"   },
 };
 
 /* autostart */

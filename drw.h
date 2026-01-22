@@ -4,7 +4,7 @@ typedef struct {
 	Cursor cursor;
 } Cur;
 
-enum { ColFg, ColBg, ColBorder, ColFloat, ColMaster }; /* Clr scheme index */
+enum { ColBorder, ColFloat, ColMaster }; /* Clr scheme index */
 typedef XftColor Clr;
 
 typedef struct {
