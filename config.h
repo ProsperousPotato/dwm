@@ -180,6 +180,11 @@ static const Button buttons[] = {
 	{ ClkRootWin,           MODKEY,            Button4,        focusstack,     {.i = -1 } },
 	{ ClkRootWin,           MODKEY,            Button5,        focusstack,     {.i = +1 } },
 
+	{ ClkClientWin,         MODKEY|ShiftMask,  Button4,        movestack,      {.i = -1 } },
+	{ ClkClientWin,         MODKEY|ShiftMask,  Button5,        movestack,      {.i = +1 } },
+	{ ClkRootWin,           MODKEY|ShiftMask,  Button4,        movestack,      {.i = -1 } },
+	{ ClkRootWin,           MODKEY|ShiftMask,  Button5,        movestack,      {.i = +1 } },
+
 	/* Focus monitors with side mouse buttons */
 	{ ClkClientWin,         MODKEY,            Button8,        focusmon,       {.i = -1 } },
 	{ ClkClientWin,         MODKEY,            Button9,        focusmon,       {.i = +1 } },

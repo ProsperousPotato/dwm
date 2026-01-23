@@ -1455,6 +1455,8 @@ movestack(const Arg *arg) {
 
 		arrange(selmon);
 	}
+
+	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
 
