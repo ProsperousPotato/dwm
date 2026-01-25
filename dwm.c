@@ -1061,7 +1061,13 @@ grabkeys(void)
 void
 incnmaster(const Arg *arg)
 {
-	selmon->nmaster = (arg->i == 0) ? nmaster : MAX(selmon->nmaster + arg->i, 0);
+	int n = 0;
+	Client *c;
+	for (c = selmon->clients; c; c = c->next)
+		if (ISVISIBLE(c))
+			n++;
+
+	selmon->nmaster = (arg->i == 0) ? nmaster : MAX(MIN(selmon->nmaster + arg->i, n), 0);
 	arrange(selmon);
 }
 
