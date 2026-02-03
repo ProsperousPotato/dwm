@@ -1069,6 +1069,7 @@ incnmaster(const Arg *arg)
 
 	selmon->nmaster = (arg->i == 0) ? nmaster : MAX(MIN(selmon->nmaster + arg->i, n), 0);
 	arrange(selmon);
+	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
 #ifdef XINERAMA
@@ -1665,6 +1666,7 @@ resetfacts(const Arg *arg)
 		c->cfact = 1.0;
 
 	arrange(selmon);
+	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
 void
@@ -1937,6 +1939,7 @@ setcfact(const Arg *arg) {
 		return;
 	c->cfact = f;
 	arrange(selmon);
+	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
 /* arg > 1.0 will set mfact absolutely */

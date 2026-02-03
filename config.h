@@ -10,7 +10,7 @@ static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
 static const int refreshrate        = 120;      /* limits the speed of moving && resizing windows */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
-static const int mousedefault       = 1;        /* 1 means enable mouse by default */
+static const int mousedefault       = 0;        /* 1 means enable mouse by default */
 static const char *colors[][3]      = {
 	/*               border      float      master      */
 	[SchemeNorm] = { "#000000",  "#000000", "#000000"   },
