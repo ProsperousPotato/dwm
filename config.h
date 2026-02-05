@@ -14,7 +14,7 @@ static const int mousedefault       = 0;        /* 1 means enable mouse by defau
 static const char *colors[][3]      = {
 	/*               border      float      master      */
 	[SchemeNorm] = { "#000000",  "#000000", "#000000"   },
-	[SchemeSel]  = { "#bbbbbb",  "#770000", "#FF8700"   },
+	[SchemeSel]  = { "#bbbbbb",  "#770000", "#FF8C00"   },
 };
 
 /* autostart */
@@ -22,6 +22,7 @@ static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
 	"xhidecursor",  "",             "",         NULL,
 	"hsetroot",     "-fill",        WALLPAPER,  NULL,
+	"xset",         "m",            "1 1",      NULL,
 	NULL
 };
 
@@ -58,6 +59,7 @@ static const Layout layouts[] = {
 	{ NULL,      tile },    /* first entry is default */
 	{ NULL,      NULL },
 	{ NULL,      monocle },
+	{ NULL,      bstack },
 };
 
 /* key definitions */
@@ -99,6 +101,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
 	{ MODKEY,                       XK_Return, togglefloating, {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
