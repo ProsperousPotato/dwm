@@ -793,7 +793,8 @@ dragmfact(const Arg *arg)
 	unsigned int n;
 	int px, py; /* pointer coordinates */
 	int dist_x, dist_y;
-	float mfact, cfact, cf, ch, mw;
+	int horizontal = 0;
+	float mfact, cfact, cf, cw, ch, mw, mh;
 	Client *c;
 	Monitor *m = selmon;
 	XEvent ev;
@@ -801,6 +802,9 @@ dragmfact(const Arg *arg)
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
 	if (!(c = m->sel) || !n || !m->lt[m->sellt]->arrange || m->lt[m->sellt]->arrange == &monocle) return;
+
+	if (m->lt[m->sellt]->arrange == bstack)
+		horizontal = 1;
 
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		None, cursor[CurResize]->cursor, CurrentTime) != GrabSuccess)
@@ -811,7 +815,9 @@ dragmfact(const Arg *arg)
 
 	cf = c->cfact;
 	ch = c->h;
+	cw = c->w;
 	mw = m->ww * m->mfact;
+	mh = m->wh * m->mfact;
 
 	do {
 		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
@@ -822,15 +828,20 @@ dragmfact(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 40))
+			if ((ev.xmotion.time - lasttime) <= (1000 / refreshrate))
 				continue;
 			lasttime = ev.xmotion.time;
 
 			dist_x = ev.xmotion.x - px;
 			dist_y = ev.xmotion.y - py;
 
-			cfact = (float) cf * (ch - dist_y) / ch;
-			mfact = (float) (mw + dist_x) / m->ww;
+			if (horizontal) {
+				cfact = (float) cf * (cw + dist_x) / cw;
+				mfact = (float) (mh + dist_y) / m->wh;
+			} else {
+				cfact = (float) cf * (ch - dist_y) / ch;
+				mfact = (float) (mw + dist_x) / m->ww;
+			}
 
 			c->cfact = MAX(0.25, MIN(4.0, cfact));
 			m->mfact = MAX(0.05, MIN(0.95, mfact));
