@@ -3,7 +3,7 @@
 /* Constants */
 #define TERMINAL "st"
 #define BROWSER "glide"
-#define WALLPAPER "/usr/share/backgrounds/windows7.jpg"
+#define WALLPAPER "black"
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
@@ -21,7 +21,8 @@ static const char *colors[][3]      = {
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
 	"xhidecursor",  "",             "",         NULL,
-	"hsetroot",     "-fill",        WALLPAPER,  NULL,
+	"hsetroot",     "-solid",       "black",    NULL,
+//	"hsetroot",     "-fill",        WALLPAPER,  NULL,
 	"xset",         "m",            "1 1",      NULL,
 	NULL
 };

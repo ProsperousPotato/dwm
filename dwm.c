@@ -2291,7 +2291,8 @@ void
 togglemouse(const Arg *arg) {
 	if (ml) {
 		XUngrabPointer(dpy, CurrentTime);
-		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+		if (selmon->sel)
+			XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 		if (fw) {
 			XDestroyWindow(dpy, fw);
 			fw = 0;
