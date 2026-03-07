@@ -933,9 +933,6 @@ focus(Client *c)
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
 	}
 		setfocus(c);
-
-		if (selmon->lt[selmon->sellt]->arrange == monocle)
-			XRaiseWindow(dpy, c->win);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
@@ -2179,6 +2176,7 @@ swapfocus()
 	for(c = selmon->clients; c && c != prevclient; c = c->next);
 	if(c == prevclient && prevclient != selmon->sel) {
 		focus(prevclient);
+		restack(selmon);
 		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 		return;
 	}
