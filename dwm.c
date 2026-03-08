@@ -519,32 +519,42 @@ unswallow(Client *c)
 
 void
 bstack(Monitor *m) {
-	int w, h, mh, mx, tx, ty, tw;
+	int w, h, mh, mx, tx, ty;
 	unsigned int i, n;
+	float mfacts = 0, sfacts = 0;
 	Client *c;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+		if (n < m->nmaster)
+			mfacts += c->cfact;
+		else
+			sfacts += c->cfact;
+	}
 	if (n == 0)
 		return;
+
+	nm = MIN(n, m->nmaster);
+
 	if (n > m->nmaster) {
 		mh = m->nmaster ? m->mfact * m->wh : 0;
-		tw = m->ww / (n - m->nmaster);
+		tw = m->ww;
 		ty = m->wy + mh;
 	} else {
 		mh = m->wh;
 		tw = m->ww;
 		ty = m->wy;
 	}
+
 	for (i = mx = 0, tx = m->wx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
 		if (i < m->nmaster) {
-			w = (m->ww - mx) / (MIN(n, m->nmaster) - i);
+			w = (m->ww * (c->cfact / mfacts));
 			resize(c, m->wx + mx, m->wy, w - (2 * c->bw), mh - (2 * c->bw), 0);
 			mx += WIDTH(c);
 		} else {
 			h = m->wh - mh;
-			resize(c, tx, ty, tw - (2 * c->bw), h - (2 * c->bw), 0);
-			if (tw != m->ww)
-				tx += WIDTH(c);
+			w = (m->ww * (c->cfact / sfacts));
+			resize(c, tx, ty, w - (2 * c->bw), h - (2 * c->bw), 0);
+			tx += WIDTH(c);
 		}
 	}
 }
