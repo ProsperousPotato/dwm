@@ -533,15 +533,11 @@ bstack(Monitor *m) {
 	if (n == 0)
 		return;
 
-	nm = MIN(n, m->nmaster);
-
 	if (n > m->nmaster) {
 		mh = m->nmaster ? m->mfact * m->wh : 0;
-		tw = m->ww;
 		ty = m->wy + mh;
 	} else {
 		mh = m->wh;
-		tw = m->ww;
 		ty = m->wy;
 	}
 
@@ -2182,15 +2178,17 @@ void
 swapfocus()
 {
 	Client *c;
-	for(c = selmon->clients; c && c != prevclient; c = c->next);
-	if(c == prevclient && prevclient != selmon->sel) {
-		focus(prevclient);
-		restack(selmon);
+	if(selmon->sel) {
+		for(c = selmon->clients; c && c != prevclient; c = c->next);
+		if(c == prevclient && prevclient != selmon->sel && ISVISIBLE(c)) {
+			focus(prevclient);
+			restack(selmon);
+			XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+			return;
+		}
+		focusstack(&(Arg){.i = +1});
 		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
-		return;
 	}
-	focusstack(&(Arg){.i = +1});
-	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
 void
