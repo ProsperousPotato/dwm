@@ -1901,6 +1901,8 @@ sendmon(Client *c, Monitor *m)
 	else
 		attach(c);
 	attachstack(c);
+	if (c->isfullscreen)
+		resizeclient(c, m->mx, m->my, m->mw, m->mh);
 	arrange(m);
 	if (hadfocus) {
 		focus(c);
