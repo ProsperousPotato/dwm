@@ -1901,6 +1901,10 @@ sendmon(Client *c, Monitor *m)
 	else
 		attach(c);
 	attachstack(c);
+	if (c->isfloating) {
+		c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+		c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+	}
 	if (c->isfullscreen)
 		resizeclient(c, m->mx, m->my, m->mw, m->mh);
 	arrange(m);
