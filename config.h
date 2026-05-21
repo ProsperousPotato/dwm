@@ -152,7 +152,7 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_b,      togglemouse,    {0} },
 
-	{ MODKEY,                       XK_slash, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_slash, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_slash, focusmon,       {.i = +1 } },
 	{ MODKEY,                       XK_z,      swapmon,        {0} },
 
