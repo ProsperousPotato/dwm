@@ -146,11 +146,13 @@ static const Key keys[] = {
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
 	{ MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
 
-	{ MODKEY,                       XK_p,      search,         {.i = 0} }, 
-	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} }, 
-	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} }, 
+	{ MODKEY,                       XK_p,      search,         {.i = 0} },
+	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} },
+	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} },
 
-	{ MODKEY,                       XK_b,      togglemouse,    {0} }, 
+	{ MODKEY,                       XK_b,      togglemouse,    {0} },
+
+	{ MODKEY,                       XK_z,      swapmon,        {0} },
 
 	// move (rightmost 'wasd' like cluster of keys in ISO layout)
 	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 15y 0w 0h" } },

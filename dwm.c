@@ -219,6 +219,7 @@ static void sighup(int unused);
 static void sigterm(int unused);
 static void spawn(const Arg *arg);
 static void swapfocus();
+static void swapmon(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
@@ -2195,6 +2196,38 @@ swapfocus()
 		focusstack(&(Arg){.i = +1});
 		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 	}
+}
+
+void
+swapmon(const Arg *arg)
+{
+	if (mons->next == NULL)
+		return;
+
+	Monitor *m1 = mons;
+	Monitor *m2 = mons->next;
+
+	unsigned int tmp = m1->tagset[m1->seltags];
+	m1->tagset[m1->seltags] = m2->tagset[m2->seltags];
+	m2->tagset[m2->seltags] = tmp;
+
+	Client *c;
+	for (c = m1->clients; c; c = c->next)
+		c->mon = m2;
+	for (c = m2->clients; c; c = c->next)
+		c->mon = m1;
+
+	Client *tmp_clients = m1->clients;
+	m1->clients = m2->clients;
+	m2->clients = tmp_clients;
+
+	Client *tmp_stack = m1->stack;
+	m1->stack = m2->stack;
+	m2->stack = tmp_stack;
+
+	focus(NULL);
+	arrange(m1);
+	arrange(m2);
 }
 
 void
