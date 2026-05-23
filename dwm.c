@@ -2185,17 +2185,32 @@ void
 swapfocus()
 {
 	Client *c;
-	if(selmon->sel) {
-		for(c = selmon->clients; c && c != prevclient; c = c->next);
-		if(c == prevclient && prevclient != selmon->sel && ISVISIBLE(c)) {
-			focus(prevclient);
-			restack(selmon);
-			XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
-			return;
-		}
-		focusstack(&(Arg){.i = +1});
+	Monitor *m;
+
+	if (!selmon->sel)
+		return;
+
+	for (m = mons; m; m = m->next)
+		for (c = m->clients; c; c = c->next)
+			if (c == prevclient)
+				goto breaker;
+
+breaker:
+	if (c == prevclient && prevclient != selmon->sel && ISVISIBLE(c)) {
+		focus(prevclient);
+		restack(prevclient->mon);
 		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+		return;
 	}
+
+	if (!selmon->clients->next) {
+		focusmon(&(Arg){.i = +1});
+		XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
+		return;
+	} else
+		focusstack(&(Arg){.i = +1});
+
+	XWarpPointer(dpy, None, selmon->sel->win, 0, 0, 0, 0, selmon->sel->w/2, selmon->sel->h/2);
 }
 
 void
@@ -2254,6 +2269,8 @@ tagmon(const Arg *arg)
 		XRaiseWindow(dpy, c->win);
 	} else
 		sendmon(c, dirtomon(arg->i));
+
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 }
 
 void

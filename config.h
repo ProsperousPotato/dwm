@@ -120,9 +120,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
 	{ MODKEYTWO,                    XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-	{ MODKEY,                       XK_x,      spawn,          SHCMD("xkill") },
 	{ MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
-	{ MODKEY|ShiftMask,             XK_w,      spawn,          SHCMD("icecat") },
 	{ MODKEY,                       XK_e,      resetfacts,     {0} },
 	{ MODKEY,                       XK_a,      swapfocus,      {0} },
 
@@ -196,4 +194,9 @@ static const Button buttons[] = {
 	{ ClkClientWin,         MODKEY,            Button9,        focusmon,       {.i = +1 } },
 	{ ClkRootWin,           MODKEY,            Button8,        focusmon,       {.i = -1 } },
 	{ ClkRootWin,           MODKEY,            Button9,        focusmon,       {.i = +1 } },
+
+	{ ClkClientWin,         MODKEY|ShiftMask,  Button8,        tagmon,         {.i = -1 } },
+	{ ClkClientWin,         MODKEY|ShiftMask,  Button9,        tagmon,         {.i = +1 } },
+	{ ClkRootWin,           MODKEY|ShiftMask,  Button8,        tagmon,         {.i = -1 } },
+	{ ClkRootWin,           MODKEY|ShiftMask,  Button9,        tagmon,         {.i = +1 } },
 };
