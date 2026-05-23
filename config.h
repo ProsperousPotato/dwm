@@ -155,16 +155,16 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_z,      swapmon,        {0} },
 
 	// move (rightmost 'wasd' like cluster of keys in ISO layout)
-	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 15y 0w 0h" } },
-	{ MODKEY,                   XK_bracketleft, moveresize,     {.v = "0x -15y 0w 0h" } },
-	{ MODKEY,                   XK_numbersign,  moveresize,     {.v = "15x 0y 0w 0h" } },
-	{ MODKEY,                   XK_semicolon,   moveresize,     {.v = "-15x 0y 0w 0h" } },
+	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 20y 0w 0h" } },
+	{ MODKEY,                   XK_bracketleft, moveresize,     {.v = "0x -20y 0w 0h" } },
+	{ MODKEY,                   XK_numbersign,  moveresize,     {.v = "20x 0y 0w 0h" } },
+	{ MODKEY,                   XK_semicolon,   moveresize,     {.v = "-20x 0y 0w 0h" } },
 
 	// resize (rightmost 'wasd' like cluster of keys in ISO layout)
-	{ MODKEY|ShiftMask,         XK_apostrophe,  moveresize,     {.v = "0x 0y 0w 15h" } },
-	{ MODKEY|ShiftMask,         XK_bracketleft, moveresize,     {.v = "0x 0y 0w -15h" } },
-	{ MODKEY|ShiftMask,         XK_numbersign,  moveresize,     {.v = "0x 0y 15w 0h" } },
-	{ MODKEY|ShiftMask,         XK_semicolon,   moveresize,     {.v = "0x 0y -15w 0h" } },
+	{ MODKEY|ShiftMask,         XK_apostrophe,  moveresize,     {.v = "0x 0y 0w 20h" } },
+	{ MODKEY|ShiftMask,         XK_bracketleft, moveresize,     {.v = "0x 0y 0w -20h" } },
+	{ MODKEY|ShiftMask,         XK_numbersign,  moveresize,     {.v = "0x 0y 20w 0h" } },
+	{ MODKEY|ShiftMask,         XK_semicolon,   moveresize,     {.v = "0x 0y -20w 0h" } },
 };
 
 #define Button8 8 // Lowest side mouse button
