@@ -127,7 +127,6 @@ static const Key keys[] = {
 #ifdef __linux__
 	{ MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -g 60x10 -e watch -c -n 2 genlop -c") },
 	{ MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
-	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("pkill steam") },
 
 	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
 	{ 0,         XF86XK_AudioLowerVolume,      spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
@@ -142,7 +141,7 @@ static const Key keys[] = {
 
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
-	{ MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maimpick") },
 
 	{ MODKEY,                       XK_p,      search,         {.i = 0} },
 	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} },
