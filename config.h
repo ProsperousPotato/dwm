@@ -5,7 +5,7 @@
 #define BROWSER "glide"
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 12;       /* snap pixel */
 static const int refreshrate        = 200;      /* limits the speed of moving && resizing windows */
 static const int swallowfloating    = 1;        /* 1 means swallow floating windows by default */
@@ -103,6 +103,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_Return, togglefullscr,  {0} },
 	{ MODKEY,                       XK_Return, togglefloating, {0} },
+	{ MODKEYTWO|ShiftMask,          XK_Return, spanmon,        {0} },
 	{ MODKEY,                       XK_grave,  view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_grave,  tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
@@ -117,41 +118,41 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_BackSpace,    quit,     {0} },
 	{ MODKEY|ShiftMask,             XK_BackSpace,    quit,     {1} }, 
 
-	{ MODKEY,                       XK_n,      spawn,          SHCMD(TERMINAL" -e newsboat") },
-	{ MODKEY,                       XK_Escape, spawn,          SHCMD(TERMINAL" -e htop") },
-	{ MODKEYTWO,                    XK_Escape, spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-	{ MODKEY,                       XK_w,      spawn,          SHCMD(BROWSER) },
-	{ MODKEY,                       XK_e,      resetfacts,     {0} },
-	{ MODKEY,                       XK_a,      swapfocus,      {0} },
+	{ MODKEY,                       XK_n,         spawn,          SHCMD(TERMINAL" -e newsboat") },
+	{ MODKEY,                       XK_Escape,    spawn,          SHCMD(TERMINAL" -e htop") },
+	{ MODKEYTWO,                    XK_Escape,    spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
+	{ MODKEY,                       XK_w,         spawn,          SHCMD(BROWSER) },
+	{ MODKEY,                       XK_e,         resetfacts,     {0} },
+	{ MODKEY,                       XK_a,         swapfocus,      {0} },
 
 #ifdef __linux__
-	{ MODKEY,                       XK_g,      spawn,          SHCMD(TERMINAL" -c stfloat -g 60x10 -e watch -c -n 2 genlop -c") },
-	{ MODKEY,                       XK_s,      spawn,          SHCMD("steam -dev") },
+	{ MODKEY,                       XK_g,         spawn,          SHCMD(TERMINAL" -c stfloat -g 60x10 -e watch -c -n 2 genlop -c") },
+	{ MODKEY,                       XK_s,         spawn,          SHCMD("steam -dev") },
 
-	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
-	{ 0,         XF86XK_AudioLowerVolume,      spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
-	{ 0,                XF86XK_AudioMute,      spawn,          SHCMD("amixer sset Master toggle 1> /dev/null") },
+	{ 0,         XF86XK_AudioRaiseVolume,         spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
+	{ 0,         XF86XK_AudioLowerVolume,         spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
+	{ 0,                XF86XK_AudioMute,         spawn,          SHCMD("amixer sset Master toggle 1> /dev/null") },
 
-	{ MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
+	{ MODKEYTWO,                    XK_t,         spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
 #endif
 
 #ifdef __OpenBSD__
-	{ MODKEYTWO,                    XK_t,      spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
+	{ MODKEYTWO,                    XK_t,         spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
 #endif
 
-	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("xbacklight -inc 10") },
-	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 10") },
-	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maimpick") },
+	{ 0,          XF86XK_MonBrightnessUp,         spawn,          SHCMD("xbacklight -inc 10") },
+	{ 0,        XF86XK_MonBrightnessDown,         spawn,          SHCMD("xbacklight -dec 10") },
+	{ MODKEY|ShiftMask,             XK_s,         spawn,          SHCMD("maimpick") },
 
-	{ MODKEY,                       XK_p,      search,         {.i = 0} },
-	{ MODKEY|ShiftMask,             XK_p,      search,         {.i = 1} },
-	{ MODKEY|ShiftMask,             XK_q,      search,         {.i = 2} },
+	{ MODKEY,                       XK_p,         search,         {.i = 0} },
+	{ MODKEY|ShiftMask,             XK_p,         search,         {.i = 1} },
+	{ MODKEY|ShiftMask,             XK_q,         search,         {.i = 2} },
 
-	{ MODKEY,                       XK_b,      togglemouse,    {0} },
+	{ MODKEY,                       XK_b,         togglemouse,    {0} },
 
-	{ MODKEY|ShiftMask,             XK_slash, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_slash, focusmon,       {.i = +1 } },
-	{ MODKEY,                       XK_z,      swapmon,        {0} },
+	{ MODKEY|ShiftMask,             XK_slash,     tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_slash,     focusmon,       {.i = +1 } },
+	{ MODKEY,                       XK_backslash, swapmon,        {0} },
 
 	// move (rightmost 'wasd' like cluster of keys in ISO layout)
 	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 20y 0w 0h" } },

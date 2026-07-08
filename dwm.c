@@ -97,6 +97,7 @@ struct Client {
 	int bw, oldbw;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, isterminal, noswallow;
+	int spanmon;
 	int issteam;
 	pid_t pid;
 	Client *next;
@@ -217,6 +218,7 @@ static void setup(void);
 static void showhide(Client *c);
 static void sighup(int unused);
 static void sigterm(int unused);
+static void spanmon(const Arg *arg);
 static void spawn(const Arg *arg);
 static void swapfocus();
 static void swapmon(const Arg *arg);
@@ -225,7 +227,7 @@ static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglefloating(const Arg *arg);
 static void togglefullscr(const Arg *arg);
-static void togglemouse(const Arg *arg);
+static void togglemouse();
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -1730,6 +1732,9 @@ resetfacts(const Arg *arg)
 {
 	Client *c;
 
+	if (!selmon->sel)
+		return;
+
 	if (!selmon->lt[selmon->sellt]->arrange) return;
 	selmon->mfact = mfact;
 
@@ -2104,7 +2109,7 @@ setup(void)
 		scheme[i] = drw_scm_create(drw, colors[i], 5);
 
 	/* init mouse */
-	if (mousedefault == 0) togglemouse(NULL);
+	if (mousedefault == 0) togglemouse();
 
 	/* supporting window for NetWMCheck */
 	wmcheckwin = XCreateSimpleWindow(dpy, root, 0, 0, 1, 1, 0, 0, 0);
@@ -2162,6 +2167,50 @@ sigterm(int unused)
 }
 
 void
+spanmon(const Arg *arg)
+{
+	Client *c;
+	Monitor *m;
+	int minx, miny, maxx, maxy;
+
+	if (!selmon->sel)
+		return;
+
+	c = selmon->sel;
+
+	if (c->isfullscreen && c->spanmon) {
+		c->spanmon = 0;
+		setfullscreen(c, 0);
+		return;
+	}
+
+	m = mons;
+	minx = m->mx;
+	miny = m->my;
+	maxx = m->mx + m->mw;
+	maxy = m->my + m->mh;
+	for (m = m->next; m; m = m->next) {
+		minx = MIN(minx, m->mx);
+		miny = MIN(miny, m->my);
+		maxx = MAX(maxx, m->mx + m->mw);
+		maxy = MAX(maxy, m->my + m->mh);
+	}
+
+	if (!c->isfullscreen) {
+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
+				PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
+		c->isfullscreen = 1;
+		c->oldstate = c->isfloating;
+		c->oldbw = c->bw;
+		c->bw = 0;
+		c->isfloating = 1;
+	}
+	c->spanmon = 1;
+	resizeclient(c, minx, miny, maxx - minx, maxy - miny);
+	XRaiseWindow(dpy, c->win);
+}
+
+void
 spawn(const Arg *arg)
 {
 	struct sigaction sa;
@@ -2187,8 +2236,10 @@ swapfocus()
 	Client *c;
 	Monitor *m;
 
-	if (!selmon->sel)
+	if (!selmon->sel) {
+		focusmon(&(Arg){.i = +1});
 		return;
+	}
 
 	for (m = mons; m; m = m->next)
 		for (c = m->clients; c; c = c->next)
@@ -2350,7 +2401,7 @@ togglefullscr(const Arg *arg)
 }
 
 void
-togglemouse(const Arg *arg) {
+togglemouse() {
 	if (ml) {
 		XUngrabPointer(dpy, CurrentTime);
 		if (selmon->sel)
