@@ -207,7 +207,7 @@ static void run(void);
 static void scan(void);
 static void search(const Arg *arg);
 static int sendevent(Client *c, Atom proto);
-static void sendmon(Client *c, Monitor *m);
+static void sendmon(Client *c, Monitor *m, int warp);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
@@ -568,16 +568,18 @@ buttonpress(XEvent *e)
 
 	click = ClkRootWin;
 	/* focus monitor if necessary */
-	if ((m = wintomon(ev->window)) && m != selmon) {
-		unfocus(selmon->sel, 1);
-		selmon = m;
-		focus(NULL);
-	}
-	if ((c = wintoclient(ev->window))) {
-		focus(c);
-		restack(selmon);
-		XAllowEvents(dpy, ReplayPointer, CurrentTime);
-		click = ClkClientWin;
+	if (!ml) {
+		if ((m = wintomon(ev->window)) && m != selmon) {
+			unfocus(selmon->sel, 1);
+			selmon = m;
+			focus(NULL);
+		}
+		if ((c = wintoclient(ev->window))) {
+			focus(c);
+			restack(selmon);
+			XAllowEvents(dpy, ReplayPointer, CurrentTime);
+			click = ClkClientWin;
+		}
 	}
 	for (i = 0; i < LENGTH(buttons); i++)
 		if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
@@ -1355,7 +1357,7 @@ movemouse(const Arg *arg)
 				resize(c, nx, ny, c->w, c->h, 1);
 			else if (arg->i == 1 && (selmon->lt[selmon->sellt]->arrange || !c->isfloating)) {
 				if ((m = recttomon(ev.xmotion.x_root, ev.xmotion.y_root, 1, 1)) != selmon) {
-					sendmon(c, m);
+					sendmon(c, m, 0);
 					selmon = m;
 					focus(NULL);
 				}
@@ -1410,7 +1412,7 @@ movemouse(const Arg *arg)
 	} while (ev.type != ButtonRelease);
 	XUngrabPointer(dpy, CurrentTime);
 	if ((m = recttomon(c->x, c->y, c->w, c->h)) != selmon) {
-		sendmon(c, m);
+		sendmon(c, m, 0);
 		selmon = m;
 		focus(NULL);
 	}
@@ -1637,7 +1639,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
 		|| &monocle == c->mon->lt[c->mon->sellt]->arrange)
 		&& !c->isfullscreen && !c->isfloating
-		&& NULL != c->mon->lt[c->mon->sellt]->arrange) {
+		&& NULL != c->mon->lt[c->mon->sellt]->arrange && mons->next == NULL) {
 		c->w = wc.width += c->bw * 2;
 		c->h = wc.height += c->bw * 2;
 		wc.border_width = 0;
@@ -1698,7 +1700,7 @@ resizemouse(const Arg *arg)
 	XUngrabPointer(dpy, CurrentTime);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
 	if ((m = recttomon(c->x, c->y, c->w, c->h)) != selmon) {
-		sendmon(c, m);
+		sendmon(c, m, 0);
 		selmon = m;
 		focus(NULL);
 	}
@@ -1891,7 +1893,7 @@ cleanup:
 }
 
 void
-sendmon(Client *c, Monitor *m)
+sendmon(Client *c, Monitor *m, int warp)
 {
 	if (c->mon == m)
 		return;
@@ -1907,7 +1909,7 @@ sendmon(Client *c, Monitor *m)
 	else
 		attach(c);
 	attachstack(c);
-	if (c->isfloating) {
+	if (c->isfloating && warp == 1) {
 		c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
 		c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
 	}
@@ -2315,12 +2317,12 @@ tagmon(const Arg *arg)
 		return;
 	if (c->isfullscreen) {
 		c->isfullscreen = 0;
-		sendmon(c, dirtomon(arg->i));
+		sendmon(c, dirtomon(arg->i), 1);
 		c->isfullscreen = 1;
 		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
 		XRaiseWindow(dpy, c->win);
 	} else
-		sendmon(c, dirtomon(arg->i));
+		sendmon(c, dirtomon(arg->i), 1);
 
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 }
