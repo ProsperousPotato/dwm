@@ -1785,11 +1785,80 @@ scan(void)
 	}
 }
 
+static char *
+searchrun(char *const argv[], const char *input, size_t inputlen)
+{
+	int pipein[2], pipeout[2];
+	pid_t pid;
+	char *result = NULL;
+	size_t resultsize = 1024, resultlen = 0, off = 0;
+	ssize_t n;
+
+	if (pipe(pipein) < 0)
+		return NULL;
+	if (pipe(pipeout) < 0) {
+		close(pipein[0]); close(pipein[1]);
+		return NULL;
+	}
+
+	pid = fork();
+	if (pid < 0) {
+		close(pipein[0]); close(pipein[1]);
+		close(pipeout[0]); close(pipeout[1]);
+		return NULL;
+	}
+
+	if (pid == 0) {
+		dup2(pipein[0], STDIN_FILENO);
+		dup2(pipeout[1], STDOUT_FILENO);
+		close(pipein[0]); close(pipein[1]);
+		close(pipeout[0]); close(pipeout[1]);
+		execvp(argv[0], argv);
+		_exit(127);
+	}
+
+	close(pipein[0]);
+	close(pipeout[1]);
+
+	while (off < inputlen) {
+		n = write(pipein[1], input + off, inputlen - off);
+		if (n < 0) {
+			if (errno == EINTR)
+				continue;
+			break;
+		}
+		off += (size_t)n;
+	}
+	close(pipein[1]);
+
+	if (!(result = malloc(resultsize)))
+		goto done;
+
+	while ((n = read(pipeout[0], result + resultlen, resultsize - resultlen)) > 0) {
+		resultlen += (size_t)n;
+		if (resultlen == resultsize) {
+			char *tmp = realloc(result, resultsize *= 2);
+			if (!tmp) { free(result); result = NULL; goto done; }
+			result = tmp;
+		}
+	}
+	{
+		char *tmp = realloc(result, resultlen + 1);
+		if (tmp) result = tmp;
+		if (result) result[resultlen] = '\0';
+	}
+
+done:
+	close(pipeout[0]);
+	waitpid(pid, NULL, 0);
+	return result;
+}
+
 void
 search(const Arg *arg) {
 	Client *c, **clients = NULL;
 	Monitor *m;
-	char *names = NULL, ts[4 + (3 * LENGTH(tags))], selname[256], dmenucmd[256];
+	char *names = NULL, *out = NULL, ts[4 + (3 * LENGTH(tags))];
 	size_t namesize = 0, nameslen = 0, namelen, needed;
 	int clientnum = 0, clientsize = 0, mode = arg->i, i, tl, first;
 
@@ -1810,7 +1879,7 @@ search(const Arg *arg) {
 			tl += snprintf(ts + tl, sizeof(ts) - tl, "] ");
 
 			namelen = strlen(c->name);
-			needed = nameslen + tl + namelen + 2;
+			needed = nameslen + 12 +  tl + namelen + 2;
 
 			if (needed > namesize) {
 				namesize = needed * 2;
@@ -1824,6 +1893,8 @@ search(const Arg *arg) {
 					die("search: realloc failed");
 			}
 
+			nameslen += snprintf(names + nameslen, namesize - nameslen,
+			                      "%d\t", clientnum - 1);
 			memcpy(names + nameslen, ts, tl);
 			nameslen += tl;
 			memcpy(names + nameslen, c->name, namelen);
@@ -1837,57 +1908,50 @@ search(const Arg *arg) {
 	if (!clientnum)
 		return;
 
-	names[nameslen - 1] = '\0';
+	{
+		char *argv[] = { "dmenu", "-l", "10", "-i", "-p", "Find client:", NULL };
+		out = searchrun(argv, names, nameslen);
+	}
 
-	snprintf(dmenucmd, sizeof(dmenucmd), "echo \"%s\" | dmenu -l 10 -i -p 'Find client:'", names);
-
-	FILE *fp = popen(dmenucmd, "r");
-	if (!fp)
+	if (!out)
 		goto cleanup;
 
-	if (fgets(selname, sizeof(selname), fp)) {
-		char *nl = strchr(selname, '\n');
+	{
+		char *nl = strchr(out, '\n');
 		if (nl) *nl = '\0';
 
-		char *clientname = strchr(selname, ']');
-		if (clientname) {
-			clientname += 2;
+		char *end;
+		long idx = strtol(out, &end, 10);
+		if (end != out && *end == '\t' && idx >= 0 && idx < clientnum) {
+			c = clients[idx];
 
-			for (i = 0; i < clientnum; i++) {
-				if (strcmp(clients[i]->name, clientname))
-					continue;
-
-				c = clients[i];
-
-				if (mode == 1 || mode == 2) {
-					c->tags = selmon->tagset[selmon->seltags];
-					if (c->mon != selmon) {
-						detach(c);
-						detachstack(c);
-						c->mon = selmon;
-						attach(c);
-						attachstack(c);
-					}
-					focus(c);
-					if (mode == 1) {
-						arrange(selmon);
-						if (c != nexttiled(selmon->clients))
-							zoom(0);
-					} else
-						killclient(0);
-				} else {
-					if (c->mon != selmon)
-						selmon = c->mon;
-					view(&(Arg){.ui = c->tags});
-					focus(c);
+			if (mode == 1 || mode == 2) {
+				c->tags = selmon->tagset[selmon->seltags];
+				if (c->mon != selmon) {
+					detach(c);
+					detachstack(c);
+					c->mon = selmon;
+					attach(c);
+					attachstack(c);
 				}
-				break;
+				focus(c);
+				if (mode == 1) {
+					arrange(selmon);
+					if (c != nexttiled(selmon->clients))
+						zoom(0);
+				} else
+					killclient(0);
+			} else {
+				if (c->mon != selmon)
+					selmon = c->mon;
+				view(&(Arg){.ui = c->tags});
+				focus(c);
 			}
 		}
 	}
 
-	pclose(fp);
 cleanup:
+	free(out);
 	free(names);
 	free(clients);
 }
