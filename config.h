@@ -20,7 +20,7 @@ static const char *colors[][3]      = {
 static const char *const autostart[] = {
 /*  program         arguments       options     null terminator  */
 	"xhidecursor",  "",             "",         NULL,
-	"xsetroot",     "-solid",       "black",    NULL,
+	"hsetroot",     "-fill",       "/usr/share/backgrounds/linux.png",    NULL,
 	"xset",         "m",            "1 1",      NULL,
 	NULL
 };
@@ -39,8 +39,8 @@ static const Rule rules[] = {
 	{ "steam",       "steamwebhelper", "Steam",        0,         0,          0,          0,         -1 },
 	{ "steam",       NULL,         "Steam Settings",   0,         1,          0,          0,         -1 },
 	{ "qemu-system-x86_64","qemu-system-x86_64",NULL,  0,         1,          0,          0,         -1 },
-	{ "st-256color", "st-256color",    NULL,           0,         0,          1,          1,         -1 },
-	{ "stfloat",     "st-256color",    NULL,           0,         1,          1,          1,         -1 },
+	{ "st-256color", "st-256color",    NULL,           0,         0,          1,          0,         -1 },
+	{ "stfloat",     "st-256color",    NULL,           0,         1,          1,          0,         -1 },
 	{ "Nsxiv",       NULL,             NULL,           0,         1,          0,          0,         -1 },
 	{ "scrcpy",      NULL,             NULL,           0,         1,          0,          0,         -1 },
 	{ "steam_app_1237950","steam_app_1237950",NULL,    0,         1,          0,          1,         -1 },
@@ -70,18 +70,12 @@ static const Layout layouts[] = {
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-
-/* commands */
-static const char *termcmd[]  = { TERMINAL, NULL };
-
 #include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_space,  spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_d,      spawn,          SHCMD("dmenu_run") },
-	{ MODKEYTWO,                    XK_space,  spawn,          SHCMD(TERMINAL" -c stfloat") },
+	{ MODKEY,                       XK_space,  spawn,          {.v = (const char*[]){ TERMINAL, NULL } } },
+	{ MODKEY,                       XK_d,      spawn,          {.v = (const char*[]){ "dmenu_run", NULL } } },
+	{ MODKEYTWO,                    XK_space,  spawn,          {.v = (const char*[]){ TERMINAL, "-c", "stfloat", NULL } } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
@@ -118,41 +112,30 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask, XK_BackSpace,    quit,     {0} },
 	{ MODKEY|ShiftMask,             XK_BackSpace,    quit,     {1} }, 
 
-	{ MODKEY,                       XK_n,         spawn,          SHCMD(TERMINAL" -e newsboat") },
-	{ MODKEY,                       XK_Escape,    spawn,          SHCMD(TERMINAL" -e htop") },
-	{ MODKEYTWO,                    XK_Escape,    spawn,          SHCMD(TERMINAL" -c stfloat -e htop") },
-	{ MODKEY,                       XK_w,         spawn,          SHCMD(BROWSER) },
-	{ MODKEY,                       XK_e,         resetfacts,     {0} },
-	{ MODKEY,                       XK_a,         swapfocus,      {0} },
+	{ MODKEY,                       XK_n,         spawn,       {.v = (const char*[]){ TERMINAL, "-e", "newsboat", NULL } } },
+	{ MODKEY,                       XK_Escape,    spawn,       {.v = (const char*[]){ TERMINAL, "-e", "htop", NULL } } },
+	{ MODKEYTWO,                    XK_Escape,    spawn,       {.v = (const char*[]){ TERMINAL, "-c", "stfloat", "-e", "htop", NULL } } },
+	{ MODKEY,                       XK_w,         spawn,       {.v = (const char*[]){ BROWSER, NULL } } },
+	{ MODKEY,                       XK_e,         resetfacts,  {0} },
+	{ MODKEY,                       XK_a,         swapfocus,   {0} },
 
-#ifdef __linux__
-	{ MODKEY,                       XK_g,         spawn,          SHCMD(TERMINAL" -c stfloat -g 60x10 -e watch -c -n 2 genlop -c") },
-	{ MODKEY,                       XK_s,         spawn,          SHCMD("steam -dev") },
+	{ MODKEY,                       XK_s,         spawn,       {.v = (const char*[]){ "steam", "-dev", NULL } } },
 
-	{ 0,         XF86XK_AudioRaiseVolume,         spawn,          SHCMD("amixer sset Master 5%+ 1> /dev/null") },
-	{ 0,         XF86XK_AudioLowerVolume,         spawn,          SHCMD("amixer sset Master 5%- 1> /dev/null") },
-	{ 0,                XF86XK_AudioMute,         spawn,          SHCMD("amixer sset Master toggle 1> /dev/null") },
+	{ 0,         XF86XK_AudioRaiseVolume,         spawn,       {.v = (const char*[]){ "amixer", "sset", "Master", "5%+", "1>", "/dev/null", NULL } } },
+	{ 0,         XF86XK_AudioLowerVolume,         spawn,       {.v = (const char*[]){ "amixer", "sset", "Master", "5%-", "1>", "/dev/null", NULL } } },
+	{ 0,                XF86XK_AudioMute,         spawn,       {.v = (const char*[]){ "amixer", "sset", "Master", "toggle", "1>", "/dev/null", NULL } } },
 
-	{ MODKEYTWO,                    XK_t,         spawn,          SHCMD(TERMINAL" -c stfloat -e watch -n 1 transmission-remote -l") },
-#endif
+	{ MODKEY|ShiftMask,             XK_s,         spawn,       {.v = (const char*[]){ "maimpick", NULL } } },
 
-#ifdef __OpenBSD__
-	{ MODKEYTWO,                    XK_t,         spawn,          SHCMD(TERMINAL" -c stfloat -e gnuwatch -n 1 transmission-remote -l") },
-#endif
+	{ MODKEY,                       XK_p,         search,      {.i = 0} },
+	{ MODKEY|ShiftMask,             XK_p,         search,      {.i = 1} },
+	{ MODKEY|ShiftMask,             XK_q,         search,      {.i = 2} },
 
-	{ 0,          XF86XK_MonBrightnessUp,         spawn,          SHCMD("xbacklight -inc 10") },
-	{ 0,        XF86XK_MonBrightnessDown,         spawn,          SHCMD("xbacklight -dec 10") },
-	{ MODKEY|ShiftMask,             XK_s,         spawn,          SHCMD("maimpick") },
+	{ MODKEY,                       XK_b,         togglemouse, {0} },
 
-	{ MODKEY,                       XK_p,         search,         {.i = 0} },
-	{ MODKEY|ShiftMask,             XK_p,         search,         {.i = 1} },
-	{ MODKEY|ShiftMask,             XK_q,         search,         {.i = 2} },
-
-	{ MODKEY,                       XK_b,         togglemouse,    {0} },
-
-	{ MODKEY|ShiftMask,             XK_slash,     tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_slash,     focusmon,       {.i = +1 } },
-	{ MODKEY,                       XK_backslash, swapmon,        {0} },
+	{ MODKEY|ShiftMask,             XK_slash,     tagmon,      {.i = +1 } },
+	{ MODKEY,                       XK_slash,     focusmon,    {.i = +1 } },
+	{ MODKEY,                       XK_backslash, swapmon,     {0} },
 
 	// move (rightmost 'wasd' like cluster of keys in ISO layout)
 	{ MODKEY,                   XK_apostrophe,  moveresize,     {.v = "0x 20y 0w 0h" } },
@@ -167,8 +150,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,         XK_semicolon,   moveresize,     {.v = "0x 0y -20w 0h" } },
 };
 
-#define Button8 8 // Lowest side mouse button
 #define Button9 9 // Highest side mouse button
+#define Button8 8 // Lowest side mouse button
 
 /* button definitions */
 static const Button buttons[] = {
