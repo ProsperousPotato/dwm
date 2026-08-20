@@ -1938,6 +1938,7 @@ search(const Arg *arg) {
 				} else
 					killclient(0);
 			} else {
+				unfocus(selmon->sel, 0);
 				if (c->mon != selmon)
 					selmon = c->mon;
 				view(&(Arg){.ui = c->tags});
